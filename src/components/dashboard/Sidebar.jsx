@@ -56,7 +56,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
         <div>
           <h1 className="font-bold text-xl text-slate-800 dark:text-[#F8FAFC] leading-none">FarmDirect</h1>
           <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mt-0.5">From Farm. To You.</p>
-          </div>
+        </div>
+      </div>
           
           <button 
             className="md:hidden p-1.5 -mr-2 rounded-md text-slate-500 hover:bg-slate-100 dark:hover:bg-[#1E293B]"

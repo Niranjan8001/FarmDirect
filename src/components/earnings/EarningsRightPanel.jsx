@@ -1,0 +1,97 @@
+import React from 'react';
+import { Landmark, ArrowRight, CheckCircle2 } from 'lucide-react';
+
+const SummaryItem = ({ label, value, isGreen, isRed }) => (
+  <div className="flex justify-between py-2.5">
+    <span className="text-sm text-slate-600 dark:text-[#94A3B8]">{label}</span>
+    <span className={`text-sm font-semibold ${isGreen ? 'text-green-600 dark:text-green-400' : isRed ? 'text-red-500' : 'text-slate-800 dark:text-[#F8FAFC]'}`}>
+      {isGreen && '+ '}{value}
+    </span>
+  </div>
+);
+
+export const EarningsRightPanel = () => {
+  return (
+    <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
+      
+      {/* Payouts */}
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5">
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Payouts</h3>
+          <button className="text-xs font-medium text-green-600 dark:text-green-400 hover:underline">View All</button>
+        </div>
+        
+        <p className="text-xs text-slate-500 dark:text-[#94A3B8]">Available for Payout</p>
+        <h2 className="text-3xl font-bold text-slate-800 dark:text-[#F8FAFC] mt-1">₹22,150</h2>
+        <p className="text-[10px] text-slate-500 dark:text-[#94A3B8] mt-1 uppercase tracking-wider">Transferred to your bank</p>
+        
+        <div className="mt-5 p-3 rounded-lg border border-slate-100 dark:border-[#334155] flex items-center gap-3">
+          <div className="bg-slate-50 dark:bg-[#0F172A] p-2 rounded-md">
+            <Landmark className="w-5 h-5 text-slate-600 dark:text-[#94A3B8]" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-800 dark:text-[#F8FAFC]">Bank Account</p>
+            <p className="text-[10px] text-slate-500 dark:text-[#94A3B8]">**** **** 1234 • State Bank of India</p>
+          </div>
+        </div>
+        
+        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold text-sm mt-5 transition-colors shadow-sm dark:shadow-green-500/20">
+          Request Payout
+        </button>
+        
+        <div className="mt-4 flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-green-500" />
+          <p className="text-[10px] text-slate-500 dark:text-[#94A3B8]">Payouts are transferred within 2-3 business days.</p>
+        </div>
+      </div>
+
+      {/* Earnings Summary */}
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5">
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Earnings Summary</h3>
+          <button className="text-xs font-medium text-slate-600 dark:text-[#94A3B8] flex items-center gap-1">
+            This Month <ArrowRight className="w-3 h-3 rotate-90" />
+          </button>
+        </div>
+        
+        <div className="space-y-1">
+          <SummaryItem label="Total Earnings" value="₹24,560" />
+          <SummaryItem label="Delivery Charges" value="₹980" isGreen />
+          <SummaryItem label="Other Income" value="₹130" isGreen />
+          <SummaryItem label="Refunds & Returns" value="₹1,500" isRed />
+          <div className="pt-2 mt-2 border-t border-slate-100 dark:border-[#334155]">
+            <SummaryItem label="Net Earnings" value="₹22,150" isGreen />
+          </div>
+        </div>
+      </div>
+
+      {/* Top Selling Products */}
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5">
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Top Selling Products</h3>
+          <button className="text-xs font-medium text-green-600 dark:text-green-400 hover:underline">View Report</button>
+        </div>
+        
+        <div className="space-y-4">
+          {[
+            { name: 'Fresh Tomatoes', orders: '75 orders', value: '₹7,560', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop' },
+            { name: 'Potatoes', orders: '40 orders', value: '₹4,320', img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop' },
+            { name: 'Cucumbers', orders: '35 orders', value: '₹3,280', img: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop' },
+            { name: 'Red Onions', orders: '28 orders', value: '₹2,850', img: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop' },
+            { name: 'Whole Wheat', orders: '20 orders', value: '₹2,150', img: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop' },
+          ].map((prod) => (
+            <div key={prod.name} className="flex items-center gap-3">
+              <img src={prod.img} alt={prod.name} className="w-10 h-10 rounded-lg object-cover border border-slate-100 dark:border-[#334155] shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-slate-800 dark:text-[#F8FAFC] truncate">{prod.name}</p>
+                <p className="text-xs text-slate-500 dark:text-[#94A3B8]">{prod.orders}</p>
+              </div>
+              <p className="text-sm font-bold text-slate-800 dark:text-[#F8FAFC]">{prod.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  );
+};

@@ -26,7 +26,7 @@ const Sparkline = () => (
 );
 
 const Card = ({ title, value, change, icon: Icon, iconColor, bgColor, hasSparkline, extraText }) => (
-  <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 flex flex-col justify-between flex-1 min-w-[200px]">
+  <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 flex flex-col justify-between">
     <div className="flex items-center gap-3 mb-4">
       <div className={`p-2 rounded-lg ${bgColor} ${iconColor}`}>
         <Icon className="w-4 h-4" />
@@ -53,7 +53,7 @@ const Card = ({ title, value, change, icon: Icon, iconColor, bgColor, hasSparkli
 
 export const EarningsStatCards = () => {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-2 mb-6 hide-scrollbar">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
       <Card 
         title="Total Earnings" 
         value="₹24,560" 

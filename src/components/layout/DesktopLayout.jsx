@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '../dashboard/Sidebar';
-import { Bell, Sun, Moon, Search } from 'lucide-react';
+import { Bell, Sun, Moon, Search, Menu } from 'lucide-react';
 
 export const DesktopLayout = ({ children }) => {
   const [isDark, setIsDark] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (isDark) {
@@ -15,13 +16,20 @@ export const DesktopLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] transition-colors duration-200 font-sans text-slate-900 dark:text-[#F8FAFC]">
-      <div className="hidden md:block">
-        <Sidebar />
-      </div>
+      <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
       
       <div className="ml-0 md:ml-64 flex flex-col h-screen">
         {/* Global Topbar */}
-        <div className="h-20 flex-shrink-0 px-8 flex items-center justify-between border-b border-transparent">
+        <div className="h-20 flex-shrink-0 px-4 md:px-8 flex items-center justify-between border-b border-transparent">
+          
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="md:hidden p-2 -ml-2 mr-2 rounded-lg text-slate-600 dark:text-[#94A3B8] hover:bg-slate-100 dark:hover:bg-[#1E293B] transition-colors"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+
           {/* Search Bar matching the new mockup */}
           <div className="flex-1 max-w-xl">
             <div className="relative hidden md:block">

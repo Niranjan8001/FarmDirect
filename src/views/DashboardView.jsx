@@ -32,10 +32,8 @@ export const DashboardView = () => {
             </button>
           </div>
 
-          <div className="overflow-x-auto pb-4">
-            <div className="min-w-[800px]">
-              <StatCards />
-            </div>
+          <div className="mb-6">
+            <StatCards />
           </div>
           <ProductTable />
           <BottomBanner />

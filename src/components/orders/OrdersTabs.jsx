@@ -14,7 +14,7 @@ export const OrdersTabs = () => {
   const [activeTab, setActiveTab] = useState('all');
 
   return (
-    <div className="border-b border-slate-200 dark:border-[#334155] mb-6 overflow-x-auto">
+    <div className="border-b border-slate-200 dark:border-[#334155] mb-6 overflow-x-auto hide-scrollbar">
       <div className="flex gap-8 min-w-max px-2">
         {tabs.map((tab) => (
           <button

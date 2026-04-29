@@ -8,7 +8,8 @@ import {
   Star, 
   User, 
   Settings,
-  HeadphonesIcon
+  HeadphonesIcon,
+  X
 } from 'lucide-react';
 
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -27,14 +28,26 @@ const NavItem = ({ icon: Icon, label, active, onClick }) => (
   </button>
 );
 
-export const Sidebar = () => {
+export const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r border-slate-200 dark:border-[#334155] bg-white dark:bg-[#020617] flex flex-col pt-6 pb-4">
-      {/* Logo */}
-      <div className="px-6 flex items-center gap-2 mb-8">
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm md:hidden transition-opacity"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-0 h-screen w-64 border-r border-slate-200 dark:border-[#334155] bg-white dark:bg-[#020617] flex flex-col pt-6 pb-4 z-50 transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      }`}>
+        {/* Logo and Close */}
+        <div className="px-6 flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2">
         <div className="bg-green-500 rounded-lg p-1.5 flex items-center justify-center">
           <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 22S4 14 4 8a8 8 0 1116 0c0 6-8 14-8 14zm0-11a3 3 0 100-6 3 3 0 000 6z" />
@@ -43,10 +56,17 @@ export const Sidebar = () => {
         <div>
           <h1 className="font-bold text-xl text-slate-800 dark:text-[#F8FAFC] leading-none">FarmDirect</h1>
           <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mt-0.5">From Farm. To You.</p>
+          </div>
+          
+          <button 
+            className="md:hidden p-1.5 -mr-2 rounded-md text-slate-500 hover:bg-slate-100 dark:hover:bg-[#1E293B]"
+            onClick={onClose}
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      </div>
 
-      {/* Nav Links */}
+        {/* Nav Links */}
       <nav className="flex-1 px-4 space-y-1">
         <NavItem icon={LayoutDashboard} label="Dashboard" active={location.pathname === '/dashboard'} onClick={() => navigate('/dashboard')} />
         <NavItem icon={Package} label="My Products" active={location.pathname === '/inventory'} onClick={() => navigate('/inventory')} />
@@ -71,5 +91,6 @@ export const Sidebar = () => {
         </div>
       </div>
     </aside>
+    </>
   );
 };

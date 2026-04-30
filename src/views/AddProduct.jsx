@@ -38,7 +38,7 @@ const TipItem = ({ icon: Icon, title, description }) => (
       <Icon className="w-5 h-5" />
     </div>
     <div>
-      <h4 className="text-sm font-bold text-slate-200">{title}</h4>
+      <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">{title}</h4>
       <p className="text-xs text-slate-500 mt-0.5">{description}</p>
     </div>
   </div>
@@ -80,8 +80,8 @@ export const AddProduct = () => {
         <Breadcrumbs />
         
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Add New Product</h1>
-          <p className="text-slate-400">Add product details to start selling on your store.</p>
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-white mb-2">Add New Product</h1>
+          <p className="text-slate-500 dark:text-slate-400">Add product details to start selling on your store.</p>
         </div>
 
         {success && (
@@ -94,18 +94,18 @@ export const AddProduct = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Form Column */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="bg-[#1E293B]/50 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6">
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-[#1E293B]/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 shadow-sm">
               
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-300">Product Name</label>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Product Name</label>
                 <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                     <Leaf className="w-5 h-5" />
                   </div>
                   <input 
                     type="text" 
                     placeholder="Enter product name"
-                    className="w-full bg-[#0F172A] border border-slate-800 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
+                    className="w-full bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-xl pl-12 pr-4 py-3.5 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     required
@@ -114,10 +114,10 @@ export const AddProduct = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-300">Category</label>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Category</label>
                 <div className="relative">
                   <select 
-                    className="w-full bg-[#0F172A] border border-slate-800 rounded-xl px-4 py-3.5 text-white appearance-none focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all cursor-pointer"
+                    className="w-full bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3.5 text-slate-800 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all cursor-pointer"
                     value={formData.category}
                     onChange={(e) => setFormData({...formData, category: e.target.value})}
                     required
@@ -136,15 +136,15 @@ export const AddProduct = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-300">Price (₹ per kg)</label>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Price (₹ per kg)</label>
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                       <IndianRupee className="w-5 h-5" />
                     </div>
                     <input 
                       type="number" 
                       placeholder="Enter price"
-                      className="w-full bg-[#0F172A] border border-slate-800 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
+                      className="w-full bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-xl pl-12 pr-4 py-3.5 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
                       value={formData.price}
                       onChange={(e) => setFormData({...formData, price: e.target.value})}
                       required
@@ -153,15 +153,15 @@ export const AddProduct = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-300">Quantity (kg)</label>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Quantity (kg)</label>
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                       <Scale className="w-5 h-5" />
                     </div>
                     <input 
                       type="number" 
                       placeholder="Enter quantity"
-                      className="w-full bg-[#0F172A] border border-slate-800 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
+                      className="w-full bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-xl pl-12 pr-4 py-3.5 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
                       value={formData.quantity}
                       onChange={(e) => setFormData({...formData, quantity: e.target.value})}
                       required
@@ -171,14 +171,14 @@ export const AddProduct = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-300">Product Image</label>
-                <div className="border-2 border-dashed border-slate-800 rounded-2xl p-10 flex flex-col items-center justify-center bg-[#0F172A] group hover:border-green-500/50 transition-colors cursor-pointer">
-                  <div className="bg-[#1E293B] p-4 rounded-full mb-4 text-slate-400 group-hover:text-green-500 transition-colors">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Product Image</label>
+                <div className="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-10 flex flex-col items-center justify-center bg-slate-50 dark:bg-[#0F172A] group hover:border-green-500/50 transition-colors cursor-pointer">
+                  <div className="bg-white dark:bg-[#1E293B] p-4 rounded-full mb-4 text-slate-400 group-hover:text-green-500 transition-colors shadow-sm">
                     <CloudUpload className="w-8 h-8" />
                   </div>
-                  <p className="text-slate-300 font-medium">Drag and drop an image here</p>
+                  <p className="text-slate-700 dark:text-slate-300 font-medium">Drag and drop an image here</p>
                   <p className="text-slate-500 text-sm mt-1">or tap to <span className="text-green-500 font-semibold">browse</span></p>
-                  <p className="text-slate-600 text-xs mt-4 uppercase tracking-widest font-bold">JPG, PNG up to 5MB</p>
+                  <p className="text-slate-400 dark:text-slate-600 text-xs mt-4 uppercase tracking-widest font-bold">JPG, PNG up to 5MB</p>
                 </div>
               </div>
 
@@ -194,18 +194,18 @@ export const AddProduct = () => {
 
           {/* Sidebar Column */}
           <div className="space-y-6">
-            <div className="bg-[#1E293B]/50 border border-slate-800 rounded-2xl p-5 flex items-center gap-4">
-              <div className="bg-green-500/20 p-3 rounded-xl text-green-500">
+            <div className="bg-white dark:bg-[#1E293B]/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+              <div className="bg-green-500/10 p-3 rounded-xl text-green-500">
                 <Leaf className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-200 leading-tight">Fresh produce. Fair prices.</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 leading-tight">Fresh produce. Fair prices.</p>
                 <p className="text-xs text-slate-500 mt-1">Help your customers eat better!</p>
               </div>
             </div>
 
-            <div className="bg-[#1E293B]/50 border border-slate-800 rounded-2xl p-6">
-              <h3 className="text-lg font-bold text-white mb-6">Tips for a great listing</h3>
+            <div className="bg-white dark:bg-[#1E293B]/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-6">Tips for a great listing</h3>
               <div className="space-y-6">
                 <TipItem 
                   icon={ImageIcon}

@@ -8,6 +8,9 @@ export const FarmerProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [language, setLanguage] = useState('English');
   const [currentUser, setCurrentUser] = useState(null);
+  const [isDark, setIsDark] = useState(true);
+
+  const toggleTheme = () => setIsDark(!isDark);
   
   // Mock Products (Inventory)
   const [products, setProducts] = useState([
@@ -63,6 +66,8 @@ export const FarmerProvider = ({ children }) => {
       currentUser,
       language,
       setLanguage,
+      isDark,
+      toggleTheme,
       login,
       logout,
       products,

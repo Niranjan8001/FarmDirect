@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '../dashboard/Sidebar';
 import { Bell, Sun, Moon, Search, Menu } from 'lucide-react';
+import { useFarmerContext } from '../../context/FarmerContext';
 
 export const DesktopLayout = ({ children }) => {
-  const [isDark, setIsDark] = useState(true);
+  const { isDark, toggleTheme } = useFarmerContext();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export const DesktopLayout = ({ children }) => {
           <div className="flex items-center gap-4 ml-auto">
             {/* Theme Toggle */}
             <button 
-              onClick={() => setIsDark(!isDark)}
+              onClick={toggleTheme}
               className="p-2 rounded-full border border-slate-200 dark:border-[#334155] text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors"
               aria-label="Toggle theme"
             >

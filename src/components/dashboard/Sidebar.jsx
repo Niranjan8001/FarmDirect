@@ -47,17 +47,20 @@ export const Sidebar = ({ isOpen, onClose }) => {
       }`}>
         {/* Logo and Close */}
         <div className="px-6 flex items-center justify-between mb-8">
-          <div className="flex items-center gap-2">
-        <div className="bg-green-500 rounded-lg p-1.5 flex items-center justify-center">
-          <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 22S4 14 4 8a8 8 0 1116 0c0 6-8 14-8 14zm0-11a3 3 0 100-6 3 3 0 000 6z" />
-          </svg>
-        </div>
-        <div>
-          <h1 className="font-bold text-xl text-slate-800 dark:text-[#F8FAFC] leading-none">FarmDirect</h1>
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mt-0.5">From Farm. To You.</p>
-        </div>
-      </div>
+          <div 
+            className="flex items-center gap-2 cursor-pointer group" 
+            onClick={() => navigate('/dashboard')}
+          >
+            <div className="bg-green-500 rounded-lg p-1.5 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 22S4 14 4 8a8 8 0 1116 0c0 6-8 14-8 14zm0-11a3 3 0 100-6 3 3 0 000 6z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="font-bold text-xl text-slate-800 dark:text-[#F8FAFC] leading-none">FarmDirect</h1>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mt-0.5">From Farm. To You.</p>
+            </div>
+          </div>
           
           <button 
             className="md:hidden p-1.5 -mr-2 rounded-md text-slate-500 hover:bg-slate-100 dark:hover:bg-[#1E293B]"

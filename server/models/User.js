@@ -1,34 +1,38 @@
 import mongoose from 'mongoose';
 
-const userSchema = mongoose.Schema({
-  firebaseUid: {
+const userSchema = new mongoose.Schema({
+  name: {
     type: String,
     required: true,
-    unique: true
-  },
-  phoneNumber: {
-    type: String,
-    sparse: true,
-    unique: true
   },
   email: {
     type: String,
+    required: false,
+    unique: true,
     sparse: true,
-    unique: true
   },
-  name: {
-    type: String
+  phone: {
+    type: String,
+    required: false,
   },
   role: {
     type: String,
-    default: 'farmer', // could be 'farmer' or 'consumer'
-    enum: ['farmer', 'consumer']
+    enum: ['farmer', 'buyer'],
+    default: 'buyer',
   },
-  // We can add other fields here based on our mock data needs
-}, {
-  timestamps: true
-});
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+    },
+    coordinates: {
+      type: [Number],
+      default: [0, 0],
+    },
+  },
+}, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
+userSchema.index({ location: '2dsphere' });
 
-export default User;
+export default mongoose.model('User', userSchema);

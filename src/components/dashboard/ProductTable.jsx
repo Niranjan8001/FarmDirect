@@ -58,8 +58,11 @@ const statusStyles = {
 };
 
 /* ── Mobile Order Card (shown ≤420px) ─────────────────────────── */
-const MobileOrderCard = ({ order }) => (
-  <div className="p-3 border-b border-slate-100 dark:border-[#334155] last:border-0">
+const MobileOrderCard = ({ order, onClick }) => (
+  <div 
+    className="p-3 border-b border-slate-100 dark:border-[#334155] last:border-0 cursor-pointer active:bg-slate-50 dark:active:bg-[#0F172A] transition-colors"
+    onClick={onClick}
+  >
     {/* Top Row: Order ID + Date | Status */}
     <div className="flex items-center justify-between mb-1.5">
       <div className="flex items-center gap-2 min-w-0">
@@ -93,7 +96,7 @@ export const ProductTable = () => {
       {/* ── Mobile Stacked Cards (≤420px) ───────────────────────── */}
       <div className="hidden max-xs:block">
         {recentOrders.map((order) => (
-          <MobileOrderCard key={order.id} order={order} />
+          <MobileOrderCard key={order.id} order={order} onClick={() => navigate(`/orders/${order.id}`)} />
         ))}
       </div>
 
@@ -145,7 +148,10 @@ export const ProductTable = () => {
                 </td>
                 <td className="py-3 px-5">
                   <div className="flex items-center gap-2">
-                    <button className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors">
+                    <button 
+                      onClick={() => navigate(`/orders/${order.id}`)}
+                      className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors"
+                    >
                       <Eye className="w-4 h-4" />
                     </button>
                     <button className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors">

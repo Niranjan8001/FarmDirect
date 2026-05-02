@@ -11,6 +11,156 @@ import { OrderActionButtons } from '../components/orders/OrderActionButtons';
 
 /* ── Rich mock data keyed by order ID ────────────────────────────── */
 const mockOrders = {
+  /* ── Dashboard Recent Orders ───────────────────────────────────── */
+  'ORD-2847': {
+    id: 'ORD-2847',
+    status: 'Delivered',
+    date: 'Today',
+    time: '10:32 AM',
+    paymentMethod: 'UPI',
+    total: 540,
+    subtotal: 490,
+    deliveryCharge: 30,
+    platformFee: 20,
+    customer: {
+      name: 'Priya Sharma',
+      phone: '+91 98765 43210',
+      email: 'priya.sharma@email.com',
+      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+      address: '42, Vaishali Nagar, Near Ridhi Sidhi Circle, Jaipur, Rajasthan – 302021',
+      isRepeat: true,
+    },
+    items: [
+      { name: 'Fresh Tomatoes', image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop', qty: 5, unit: 'kg', pricePerUnit: 50, total: 250 },
+      { name: 'Cucumbers', image: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop', qty: 4, unit: 'kg', pricePerUnit: 35, total: 140 },
+      { name: 'Green Chilies', image: 'https://images.unsplash.com/photo-1588144210663-8f0a2021fb2e?w=100&h=100&fit=crop', qty: 1, unit: 'kg', pricePerUnit: 100, total: 100 },
+    ],
+    timeline: {
+      placed: { done: true, date: 'Today, 10:32 AM' },
+      packed: { done: true, date: 'Today, 11:00 AM' },
+      shipped: { done: true, date: 'Today, 12:30 PM' },
+      delivered: { done: true, date: 'Today, 02:15 PM' },
+    },
+  },
+  'ORD-2846': {
+    id: 'ORD-2846',
+    status: 'Processing',
+    date: 'Today',
+    time: '09:15 AM',
+    paymentMethod: 'Card',
+    total: 1250,
+    subtotal: 1200,
+    deliveryCharge: 30,
+    platformFee: 20,
+    customer: {
+      name: 'Amit Patel',
+      phone: '+91 99887 76655',
+      email: 'amit.patel@email.com',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+      address: '15, Lal Kothi, MI Road, Jaipur, Rajasthan – 302001',
+      isRepeat: false,
+    },
+    items: [
+      { name: 'Whole Wheat', image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop', qty: 10, unit: 'kg', pricePerUnit: 60, total: 600 },
+      { name: 'Potatoes', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop', qty: 20, unit: 'kg', pricePerUnit: 30, total: 600 },
+    ],
+    timeline: {
+      placed: { done: true, date: 'Today, 09:15 AM' },
+      packed: { done: false, date: null },
+      shipped: { done: false, date: null },
+      delivered: { done: false, date: null },
+    },
+  },
+  'ORD-2845': {
+    id: 'ORD-2845',
+    status: 'Shipped',
+    date: 'Yesterday',
+    time: '04:20 PM',
+    paymentMethod: 'COD',
+    total: 210,
+    subtotal: 160,
+    deliveryCharge: 30,
+    platformFee: 20,
+    customer: {
+      name: 'Neha Gupta',
+      phone: '+91 98712 34567',
+      email: 'neha.gupta@email.com',
+      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+      address: '8, Sadar Bazaar, Main Market, Sikar, Rajasthan – 332001',
+      isRepeat: true,
+    },
+    items: [
+      { name: 'Red Onions', image: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop', qty: 4, unit: 'kg', pricePerUnit: 40, total: 160 },
+    ],
+    timeline: {
+      placed: { done: true, date: 'Yesterday, 04:20 PM' },
+      packed: { done: true, date: 'Yesterday, 05:00 PM' },
+      shipped: { done: true, date: 'Today, 08:00 AM' },
+      delivered: { done: false, date: null },
+    },
+  },
+  'ORD-2844': {
+    id: 'ORD-2844',
+    status: 'Delivered',
+    date: 'Yesterday',
+    time: '11:45 AM',
+    paymentMethod: 'UPI',
+    total: 780,
+    subtotal: 730,
+    deliveryCharge: 30,
+    platformFee: 20,
+    customer: {
+      name: 'Raj Malhotra',
+      phone: '+91 95432 10987',
+      email: 'raj.malhotra@email.com',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
+      address: '5, Pushkar Road, Near Ajmer Junction, Ajmer, Rajasthan – 305001',
+      isRepeat: false,
+    },
+    items: [
+      { name: 'Fresh Tomatoes', image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop', qty: 8, unit: 'kg', pricePerUnit: 50, total: 400 },
+      { name: 'Red Onions', image: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop', qty: 5, unit: 'kg', pricePerUnit: 40, total: 200 },
+      { name: 'Potatoes', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop', qty: 5, unit: 'kg', pricePerUnit: 30, total: 150 },
+    ],
+    timeline: {
+      placed: { done: true, date: 'Yesterday, 11:45 AM' },
+      packed: { done: true, date: 'Yesterday, 12:30 PM' },
+      shipped: { done: true, date: 'Yesterday, 02:00 PM' },
+      delivered: { done: true, date: 'Yesterday, 05:30 PM' },
+    },
+  },
+  'ORD-2843': {
+    id: 'ORD-2843',
+    status: 'Cancelled',
+    date: '28 Apr',
+    time: '03:10 PM',
+    paymentMethod: 'UPI',
+    total: 640,
+    subtotal: 590,
+    deliveryCharge: 30,
+    platformFee: 20,
+    customer: {
+      name: 'Sunita Devi',
+      phone: '+91 97123 45678',
+      email: 'sunita.devi@email.com',
+      image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop',
+      address: '22, Raja Park, Near Central Park, Jaipur, Rajasthan – 302004',
+      isRepeat: false,
+    },
+    items: [
+      { name: 'Cucumbers', image: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop', qty: 6, unit: 'kg', pricePerUnit: 35, total: 210 },
+      { name: 'Whole Wheat', image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop', qty: 5, unit: 'kg', pricePerUnit: 60, total: 300 },
+      { name: 'Green Chilies', image: 'https://images.unsplash.com/photo-1588144210663-8f0a2021fb2e?w=100&h=100&fit=crop', qty: 1, unit: 'kg', pricePerUnit: 80, total: 80 },
+    ],
+    timeline: {
+      placed: { done: true, date: '28 Apr, 03:10 PM' },
+      packed: { done: false, date: null },
+      shipped: { done: false, date: null },
+      delivered: { done: false, date: null },
+    },
+  },
+
+  /* ── Orders Page Table Orders ──────────────────────────────────── */
   'ORD1256': {
     id: '#ORD1256',
     status: 'Delivered',
@@ -168,9 +318,9 @@ export const OrderDetailView = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
 
-  /* Resolve order data */
-  const cleanId = orderId?.replace('#', '').replace('ORD-', 'ORD');
-  const initialOrder = mockOrders[cleanId] || fallbackOrder;
+  /* Resolve order data — try raw id first, then stripped version */
+  const cleanId = orderId?.replace('#', '');
+  const initialOrder = mockOrders[orderId] || mockOrders[cleanId] || fallbackOrder;
 
   const [order, setOrder] = useState(initialOrder);
 

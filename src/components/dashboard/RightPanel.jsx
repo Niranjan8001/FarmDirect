@@ -132,7 +132,6 @@ export const RightPanel = () => {
     <div className="w-80 flex-shrink-0 flex flex-col gap-6 pt-[88px]">
       <ProfileCard />
       <QuickActions />
-      <RecentOrders />
     </div>
   );
 };

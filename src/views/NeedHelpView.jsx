@@ -179,16 +179,16 @@ export const NeedHelpView = () => {
           <div className="w-full lg:w-72 xl:w-80 flex-shrink-0 space-y-6">
 
             {/* Help Center Card */}
-            <div className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] dark:from-[#1E293B] dark:to-[#0F172A] rounded-xl p-6 text-white relative overflow-hidden">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 dark:from-[#1E293B] dark:to-[#0F172A] dark:border-[#334155] rounded-xl p-6 relative overflow-hidden">
               {/* Decorative glow */}
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-500/10 rounded-full blur-2xl"></div>
               <div className="flex items-start gap-4 mb-4 relative z-10">
-                <div className="bg-green-500/20 p-3 rounded-xl">
-                  <Headphones className="w-6 h-6 text-green-400" />
+                <div className="bg-green-100 dark:bg-green-500/20 p-3 rounded-xl">
+                  <Headphones className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base">Help Center</h3>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">Find answers to common questions and learn how to make the most of FarmDirect.</p>
+                  <h3 className="font-bold text-base text-slate-800 dark:text-white">Help Center</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-300 mt-1 leading-relaxed">Find answers to common questions and learn how to make the most of FarmDirect.</p>
                 </div>
               </div>
               <button className="relative z-10 w-full bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors">

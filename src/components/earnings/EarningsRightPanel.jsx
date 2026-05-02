@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Landmark, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Landmark, ArrowRight, CheckCircle2, Loader2, Check } from 'lucide-react';
 
 const CountUp = ({ end, duration = 1000, prefix = "", suffix = "" }) => {
   const [count, setCount] = useState(0);
@@ -36,6 +36,62 @@ const SummaryItem = ({ label, value, isGreen, isRed }) => (
   </div>
 );
 
+const PayoutButton = () => {
+  const [status, setStatus] = useState('idle'); // idle | processing | success
+
+  const handleClick = () => {
+    if (status !== 'idle') return;
+    
+    setStatus('processing');
+    
+    // Simulate API call
+    setTimeout(() => {
+      setStatus('success');
+      
+      // Reset back to idle after 3 seconds
+      setTimeout(() => {
+        setStatus('idle');
+      }, 3000);
+    }, 2000);
+  };
+
+  return (
+    <button 
+      onClick={handleClick}
+      disabled={status !== 'idle'}
+      className={`w-full py-3 rounded-lg font-bold text-sm mt-5 transition-all duration-500 shadow-sm flex items-center justify-center gap-2 overflow-hidden relative
+        ${status === 'idle' ? 'bg-green-600 hover:bg-green-700 text-white hover:scale-[1.02] active:scale-[0.98]' : ''}
+        ${status === 'processing' ? 'bg-green-700 text-white/70 cursor-not-allowed' : ''}
+        ${status === 'success' ? 'bg-emerald-500 text-white cursor-default' : ''}
+      `}
+    >
+      <div className="flex items-center justify-center gap-2 transition-all duration-300">
+        {status === 'idle' && (
+          <span className="animate-fade-in">Request Payout</span>
+        )}
+        
+        {status === 'processing' && (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span className="animate-pulse">Processing...</span>
+          </>
+        )}
+        
+        {status === 'success' && (
+          <>
+            <div className="bg-white/20 rounded-full p-0.5">
+              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path className="animate-checkmark" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span className="animate-fade-in">Sent Successfully</span>
+          </>
+        )}
+      </div>
+    </button>
+  );
+};
+
 export const EarningsRightPanel = () => {
   return (
     <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
@@ -63,9 +119,7 @@ export const EarningsRightPanel = () => {
           </div>
         </div>
         
-        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold text-sm mt-5 transition-all duration-300 shadow-sm dark:shadow-green-500/20 active:scale-[0.98]">
-          Request Payout
-        </button>
+        <PayoutButton />
         
         <div className="mt-4 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-green-500" />

@@ -3,7 +3,7 @@ import { Download, Calendar } from 'lucide-react';
 
 export const EarningsHeader = () => {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 opacity-0 animate-fade-in-up">
       <div>
         <h2 className="text-2xl font-bold text-slate-800 dark:text-[#F8FAFC]">Earnings</h2>
         <p className="text-slate-500 dark:text-[#94A3B8] mt-1 text-sm">Track your income and manage your finances.</p>

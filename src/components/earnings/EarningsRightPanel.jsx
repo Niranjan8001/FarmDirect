@@ -1,5 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Landmark, ArrowRight, CheckCircle2 } from 'lucide-react';
+
+const CountUp = ({ end, duration = 1000, prefix = "", suffix = "" }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime = null;
+    const endValue = typeof end === 'string' ? parseFloat(end.replace(/[₹,]/g, '')) : end;
+    
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const currentCount = Math.floor(progress * endValue);
+      setCount(currentCount);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [end, duration]);
+
+  const formatValue = (val) => {
+    return prefix + val.toLocaleString() + suffix;
+  };
+
+  return <span>{formatValue(count)}</span>;
+};
 
 const SummaryItem = ({ label, value, isGreen, isRed }) => (
   <div className="flex justify-between py-2.5">
@@ -15,18 +41,20 @@ export const EarningsRightPanel = () => {
     <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
       
       {/* Payouts */}
-      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 hover-card opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Payouts</h3>
           <button className="text-xs font-medium text-green-600 dark:text-green-400 hover:underline">View All</button>
         </div>
         
         <p className="text-xs text-slate-500 dark:text-[#94A3B8]">Available for Payout</p>
-        <h2 className="text-3xl font-bold text-slate-800 dark:text-[#F8FAFC] mt-1">₹22,150</h2>
+        <h2 className="text-3xl font-bold text-slate-800 dark:text-[#F8FAFC] mt-1">
+          <CountUp end="₹22,150" prefix="₹" />
+        </h2>
         <p className="text-[10px] text-slate-500 dark:text-[#94A3B8] mt-1 uppercase tracking-wider">Transferred to your bank</p>
         
-        <div className="mt-5 p-3 rounded-lg border border-slate-100 dark:border-[#334155] flex items-center gap-3">
-          <div className="bg-slate-50 dark:bg-[#0F172A] p-2 rounded-md">
+        <div className="mt-5 p-3 rounded-lg border border-slate-100 dark:border-[#334155] flex items-center gap-3 group">
+          <div className="bg-slate-50 dark:bg-[#0F172A] p-2 rounded-md transition-transform duration-300 group-hover:scale-110">
             <Landmark className="w-5 h-5 text-slate-600 dark:text-[#94A3B8]" />
           </div>
           <div>
@@ -35,7 +63,7 @@ export const EarningsRightPanel = () => {
           </div>
         </div>
         
-        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold text-sm mt-5 transition-colors shadow-sm dark:shadow-green-500/20">
+        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold text-sm mt-5 transition-all duration-300 shadow-sm dark:shadow-green-500/20 active:scale-[0.98]">
           Request Payout
         </button>
         
@@ -46,7 +74,7 @@ export const EarningsRightPanel = () => {
       </div>
 
       {/* Earnings Summary */}
-      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 hover-card opacity-0 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Earnings Summary</h3>
           <button className="text-xs font-medium text-slate-600 dark:text-[#94A3B8] flex items-center gap-1">
@@ -66,7 +94,7 @@ export const EarningsRightPanel = () => {
       </div>
 
       {/* Top Selling Products */}
-      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 hover-card opacity-0 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
         <div className="flex items-center justify-between mb-5">
           <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Top Selling Products</h3>
           <button className="text-xs font-medium text-green-600 dark:text-green-400 hover:underline">View Report</button>
@@ -74,13 +102,13 @@ export const EarningsRightPanel = () => {
         
         <div className="space-y-4">
           {[
-            { name: 'Fresh Tomatoes', orders: '75 orders', value: '₹7,560', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop' },
-            { name: 'Potatoes', orders: '40 orders', value: '₹4,320', img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop' },
-            { name: 'Cucumbers', orders: '35 orders', value: '₹3,280', img: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop' },
-            { name: 'Red Onions', orders: '28 orders', value: '₹2,850', img: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop' },
-            { name: 'Whole Wheat', orders: '20 orders', value: '₹2,150', img: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop' },
+            { name: 'Fresh Tomatoes', orders: '75 orders', value: '₹7,560', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop', delay: '0.7s' },
+            { name: 'Potatoes', orders: '40 orders', value: '₹4,320', img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop', delay: '0.8s' },
+            { name: 'Cucumbers', orders: '35 orders', value: '₹3,280', img: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop', delay: '0.9s' },
+            { name: 'Red Onions', orders: '28 orders', value: '₹2,850', img: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop', delay: '1.0s' },
+            { name: 'Whole Wheat', orders: '20 orders', value: '₹2,150', img: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop', delay: '1.1s' },
           ].map((prod) => (
-            <div key={prod.name} className="flex items-center gap-3">
+            <div key={prod.name} className="flex items-center gap-3 opacity-0 animate-fade-in-up" style={{ animationDelay: prod.delay }}>
               <img src={prod.img} alt={prod.name} className="w-10 h-10 rounded-lg object-cover border border-slate-100 dark:border-[#334155] shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-slate-800 dark:text-[#F8FAFC] truncate">{prod.name}</p>

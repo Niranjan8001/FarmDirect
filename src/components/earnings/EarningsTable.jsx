@@ -12,7 +12,7 @@ const transactions = [
 
 export const EarningsTable = () => {
   return (
-    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden mt-6">
+    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden mt-6 hover-card opacity-0 animate-fade-in-up" style={{ animationDelay: '1.0s' }}>
       <div className="p-5 border-b border-slate-100 dark:border-[#334155]">
         <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Earnings Transactions</h3>
       </div>

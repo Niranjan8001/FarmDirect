@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant max-xs (@media (max-width: 420px));
 
 @theme {
   --color-green-50: #f0fdf4;

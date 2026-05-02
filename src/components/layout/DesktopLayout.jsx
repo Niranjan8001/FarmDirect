@@ -1,7 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '../dashboard/Sidebar';
-import { Bell, Sun, Moon, Search, Menu } from 'lucide-react';
+import { Bell, Sun, Moon, Search, Menu, Home, ClipboardList, PlusCircle, Package, DollarSign } from 'lucide-react';
 import { useFarmerContext } from '../../context/FarmerContext';
+import { NavLink } from 'react-router-dom';
+
+/* ── Mobile Bottom Nav (≤420px only) ─────────────────────────── */
+const MobileBottomNav = () => {
+  const navItems = [
+    { icon: Home, label: 'Home', path: '/dashboard' },
+    { icon: ClipboardList, label: 'Orders', path: '/orders' },
+    { icon: PlusCircle, label: 'Add', path: '/add-product', isCenter: true },
+    { icon: Package, label: 'Products', path: '/inventory' },
+    { icon: DollarSign, label: 'Earnings', path: '/earnings' },
+  ];
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0F172A] border-t border-slate-200 dark:border-[#334155] z-50 hidden max-xs:block safe-area-bottom">
+      <div className="flex justify-around items-center h-14">
+        {navItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              `flex flex-col items-center justify-center w-full h-full transition-colors ${
+                item.isCenter
+                  ? 'text-green-500'
+                  : isActive
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-slate-400 dark:text-slate-500'
+              }`
+            }
+          >
+            <item.icon className={`${item.isCenter ? 'w-7 h-7' : 'w-5 h-5'}`} />
+            {!item.isCenter && <span className="text-[9px] font-medium mt-0.5">{item.label}</span>}
+          </NavLink>
+        ))}
+      </div>
+    </nav>
+  );
+};
 
 export const DesktopLayout = ({ children }) => {
   const { isDark, toggleTheme } = useFarmerContext();
@@ -21,14 +58,14 @@ export const DesktopLayout = ({ children }) => {
       
       <div className="ml-0 md:ml-64 flex flex-col h-screen">
         {/* Global Topbar */}
-        <div className="h-20 flex-shrink-0 px-4 md:px-8 flex items-center justify-between border-b border-transparent">
+        <div className="max-xs:h-14 h-20 flex-shrink-0 max-xs:px-3 px-4 md:px-8 flex items-center justify-between border-b border-transparent">
           
           {/* Mobile Menu Toggle */}
           <button 
             className="md:hidden p-2 -ml-2 mr-2 rounded-lg text-slate-600 dark:text-[#94A3B8] hover:bg-slate-100 dark:hover:bg-[#1E293B] transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-6 h-6 max-xs:w-5 max-xs:h-5" />
           </button>
 
           {/* Search Bar matching the new mockup */}
@@ -43,25 +80,25 @@ export const DesktopLayout = ({ children }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 ml-auto">
+          <div className="flex items-center max-xs:gap-2 gap-4 ml-auto">
             {/* Theme Toggle */}
             <button 
               onClick={toggleTheme}
-              className="p-2 rounded-full border border-slate-200 dark:border-[#334155] text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors"
+              className="p-2 max-xs:p-1.5 rounded-full border border-slate-200 dark:border-[#334155] text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors"
               aria-label="Toggle theme"
             >
-              {isDark ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+              {isDark ? <Moon className="w-5 h-5 max-xs:w-4 max-xs:h-4" /> : <Sun className="w-5 h-5 max-xs:w-4 max-xs:h-4" />}
             </button>
 
             {/* Notifications */}
-            <button className="relative p-2 text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] rounded-full transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-green-500 rounded-full border-2 border-white dark:border-[#020617]"></span>
+            <button className="relative p-2 max-xs:p-1.5 text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] rounded-full transition-colors">
+              <Bell className="w-5 h-5 max-xs:w-4 max-xs:h-4" />
+              <span className="absolute top-1.5 right-1.5 max-xs:top-1 max-xs:right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-white dark:border-[#020617]"></span>
             </button>
 
             {/* Small Profile Info */}
-            <div className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200 dark:border-[#334155]">
-              <div className="w-10 h-10 rounded-full border-2 border-slate-100 dark:border-[#1E293B] overflow-hidden">
+            <div className="flex items-center gap-3 max-xs:gap-2 ml-2 max-xs:ml-1 pl-4 max-xs:pl-2 border-l border-slate-200 dark:border-[#334155]">
+              <div className="w-10 h-10 max-xs:w-8 max-xs:h-8 rounded-full border-2 border-slate-100 dark:border-[#1E293B] overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150" 
                   alt="Ramesh Yadav" 
@@ -84,6 +121,9 @@ export const DesktopLayout = ({ children }) => {
           {children}
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 };

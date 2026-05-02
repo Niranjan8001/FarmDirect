@@ -57,19 +57,48 @@ const statusStyles = {
   Cancelled: 'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400',
 };
 
+/* ── Mobile Order Card (shown ≤420px) ─────────────────────────── */
+const MobileOrderCard = ({ order }) => (
+  <div className="p-3 border-b border-slate-100 dark:border-[#334155] last:border-0">
+    {/* Top Row: Order ID + Date | Status */}
+    <div className="flex items-center justify-between mb-1.5">
+      <div className="flex items-center gap-2 min-w-0">
+        <span className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.id}</span>
+        <span className="text-[10px] text-slate-400 dark:text-slate-500">·</span>
+        <span className="text-[10px] text-slate-500 dark:text-[#94A3B8] truncate">{order.date}</span>
+      </div>
+      <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium flex-shrink-0 ml-2 ${statusStyles[order.status]}`}>
+        {order.status}
+      </span>
+    </div>
+    {/* Middle: Items (truncated) */}
+    <p className="text-xs text-slate-500 dark:text-slate-400 truncate mb-1">{order.items}</p>
+    {/* Bottom: Total */}
+    <p className="text-sm font-bold text-slate-800 dark:text-[#F8FAFC]">{order.total}</p>
+  </div>
+);
+
 export const ProductTable = () => {
   const navigate = useNavigate();
   return (
-    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden mt-6">
-      <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-[#334155]">
-        <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC]">Recent Orders</h3>
-        <button onClick={() => navigate('/orders')} className="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1">
+    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden max-xs:mt-3 mt-6">
+      <div className="flex items-center justify-between max-xs:p-3 p-5 border-b border-slate-100 dark:border-[#334155]">
+        <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC] max-xs:text-sm">Recent Orders</h3>
+        <button onClick={() => navigate('/orders')} className="max-xs:text-xs text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1">
           View all orders
           <span>→</span>
         </button>
       </div>
-      
-      <div className="overflow-x-auto">
+
+      {/* ── Mobile Stacked Cards (≤420px) ───────────────────────── */}
+      <div className="hidden max-xs:block">
+        {recentOrders.map((order) => (
+          <MobileOrderCard key={order.id} order={order} />
+        ))}
+      </div>
+
+      {/* ── Desktop/Tablet Table (>420px) ───────────────────────── */}
+      <div className="overflow-x-auto max-xs:hidden">
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-slate-100 dark:border-[#334155]">

@@ -84,15 +84,22 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Need Help */}
       <div className="px-4 mt-auto">
-        <div className="bg-green-50 dark:bg-[#0F172A] rounded-2xl p-4 flex items-center gap-3">
+        <button
+          onClick={() => navigate('/need-help')}
+          className={`w-full rounded-2xl p-4 flex items-center gap-3 transition-all cursor-pointer ${
+            location.pathname === '/need-help'
+              ? 'bg-green-100 dark:bg-green-500/15 ring-1 ring-green-400/30'
+              : 'bg-green-50 dark:bg-[#0F172A] hover:bg-green-100 dark:hover:bg-green-500/10'
+          }`}
+        >
           <div className="bg-white dark:bg-[#1E293B] p-2 rounded-full shadow-sm text-green-600 dark:text-green-400">
             <HeadphonesIcon className="w-5 h-5" />
           </div>
-          <div>
+          <div className="text-left">
             <p className="text-sm font-semibold text-slate-800 dark:text-[#F8FAFC]">Need Help?</p>
             <p className="text-xs text-slate-500 dark:text-slate-400">Contact Support</p>
           </div>
-        </div>
+        </button>
       </div>
     </aside>
     </>

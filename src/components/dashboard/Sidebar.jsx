@@ -74,7 +74,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
       <nav className="flex-1 px-4 space-y-1">
         <NavItem icon={LayoutDashboard} label="Dashboard" active={location.pathname === '/dashboard'} onClick={() => navigate('/dashboard')} />
         <NavItem icon={Package} label="My Products" active={location.pathname === '/inventory'} onClick={() => navigate('/inventory')} />
-        <NavItem icon={ClipboardList} label="Orders" active={location.pathname === '/orders'} onClick={() => navigate('/orders')} />
+        <NavItem icon={ClipboardList} label="Orders" active={location.pathname.startsWith('/orders')} onClick={() => navigate('/orders')} />
         <NavItem icon={DollarSign} label="Earnings" active={location.pathname === '/earnings'} onClick={() => navigate('/earnings')} />
         <NavItem icon={MessageSquare} label="Messages" active={location.pathname === '/messages'} onClick={() => navigate('/messages')} />
         <NavItem icon={Star} label="Reviews" active={location.pathname === '/reviews'} onClick={() => navigate('/reviews')} />

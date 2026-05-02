@@ -16,6 +16,7 @@ import { ReviewsView } from './views/ReviewsView';
 import { ProfileView } from './views/ProfileView';
 import { SettingsView } from './views/SettingsView';
 import { NeedHelpView } from './views/NeedHelpView';
+import { OrderDetailView } from './views/OrderDetailView';
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useFarmerContext();
@@ -50,6 +51,7 @@ const AppRoutes = () => {
       <Route path="/dashboard" element={<PrivateRoute><DashboardView /></PrivateRoute>} />
       <Route path="/add-product" element={<PrivateRoute><AddProduct /></PrivateRoute>} />
       <Route path="/orders" element={<PrivateRoute><OrdersView /></PrivateRoute>} />
+      <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetailView /></PrivateRoute>} />
       <Route path="/inventory" element={<PrivateRoute><ProductsView /></PrivateRoute>} />
       <Route path="/earnings" element={<PrivateRoute><EarningsView /></PrivateRoute>} />
       <Route path="/messages" element={<PrivateRoute><MessagesView /></PrivateRoute>} />

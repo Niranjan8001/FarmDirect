@@ -1,5 +1,6 @@
 import React from 'react';
 import { Eye, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ordersData = [
   { id: '#ORD1256', customer: 'Priya Sharma', location: 'Jaipur, RJ', product: 'Fresh Tomatoes', weight: '5 kg', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop', quantity: '5 kg', amount: '₹125', date: 'May 22, 2024', time: '10:30 AM', status: 'Delivered', payment: 'Paid' },
@@ -13,6 +14,8 @@ const ordersData = [
 ];
 
 export const OrdersTable = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden flex flex-col">
       <div className="overflow-x-auto">
@@ -93,7 +96,10 @@ export const OrdersTable = () => {
                   </span>
                 </td>
                 <td className="py-3 px-6 text-center">
-                  <button className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors inline-flex">
+                  <button 
+                    onClick={() => navigate(`/orders/${order.id.replace('#', '')}`)}
+                    className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors inline-flex"
+                  >
                     <Eye className="w-4 h-4" />
                   </button>
                 </td>

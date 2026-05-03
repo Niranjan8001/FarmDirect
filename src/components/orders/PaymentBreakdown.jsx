@@ -6,7 +6,7 @@ export const PaymentBreakdown = ({ order }) => {
     <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6">
       <h2 className="text-base font-bold text-slate-800 dark:text-[#F8FAFC] mb-5 flex items-center gap-2">
         <IndianRupee className="w-4 h-4 text-green-600 dark:text-green-400" />
-        Payment Breakdown
+        Payment Summary
       </h2>
 
       <div className="space-y-3">

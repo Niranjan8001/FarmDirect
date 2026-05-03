@@ -6,8 +6,6 @@ import { OrderSummaryCard } from '../components/orders/OrderSummaryCard';
 import { CustomerDetails } from '../components/orders/CustomerDetails';
 import { ItemsOrdered } from '../components/orders/ItemsOrdered';
 import { PaymentBreakdown } from '../components/orders/PaymentBreakdown';
-import { DeliveryTimeline } from '../components/orders/DeliveryTimeline';
-import { OrderActionButtons } from '../components/orders/OrderActionButtons';
 
 /* ── Rich mock data keyed by order ID ────────────────────────────── */
 const mockOrders = {
@@ -359,7 +357,7 @@ export const OrderDetailView = () => {
 
   return (
     <DesktopLayout>
-      <div className="px-4 md:px-8 pb-28 md:pb-8 max-xs:px-4 max-xs:pb-40">
+      <div className="px-4 md:px-8 pb-8 max-xs:px-4">
 
         {/* Page Header */}
         <OrderDetailHeader order={order} />
@@ -370,14 +368,11 @@ export const OrderDetailView = () => {
           {/* ══════════ LEFT COLUMN ══════════ */}
           <div className="flex-1 min-w-0 space-y-6">
 
-            {/* Order Summary */}
+            {/* Order Summary (includes integrated timeline) */}
             <OrderSummaryCard order={order} />
 
             {/* Items Ordered */}
             <ItemsOrdered items={order.items} />
-
-            {/* Delivery Timeline */}
-            <DeliveryTimeline timeline={order.timeline} status={order.status} />
 
           </div>
 
@@ -387,21 +382,13 @@ export const OrderDetailView = () => {
             {/* Customer Details */}
             <CustomerDetails customer={order.customer} />
 
-            {/* Payment Breakdown */}
+            {/* Payment Summary */}
             <PaymentBreakdown order={order} />
 
           </div>
 
         </div>
       </div>
-
-      {/* Sticky Bottom Action Buttons (mobile-optimized) */}
-      <OrderActionButtons
-        status={order.status}
-        onMarkShipped={handleMarkShipped}
-        onMarkDelivered={handleMarkDelivered}
-        onCancelOrder={handleCancelOrder}
-      />
     </DesktopLayout>
   );
 };

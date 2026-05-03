@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, MessageCircle, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Download, Phone, ChevronRight } from 'lucide-react';
 
 const statusConfig = {
   Delivered: 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400',
@@ -69,7 +69,7 @@ export const OrderDetailHeader = ({ order }) => {
             <span className="sm:hidden">Invoice</span>
           </button>
           <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-sm">
-            <MessageCircle className="w-4 h-4" />
+            <Phone className="w-4 h-4" />
             <span className="hidden sm:inline">Contact Customer</span>
             <span className="sm:hidden">Contact</span>
           </button>

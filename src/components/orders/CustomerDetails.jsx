@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin, Star, ExternalLink } from 'lucide-react';
+import { Phone, Mail, MapPin, Star } from 'lucide-react';
 
 export const CustomerDetails = ({ customer }) => {
   return (
@@ -10,7 +10,7 @@ export const CustomerDetails = ({ customer }) => {
 
       {/* Profile Row */}
       <div className="flex items-start gap-4 mb-5">
-        <div className="w-14 h-14 rounded-full border-2 border-slate-100 dark:border-[#334155] overflow-hidden flex-shrink-0">
+        <div className="w-14 h-14 rounded-full border-2 border-green-200 dark:border-green-500/30 overflow-hidden flex-shrink-0 shadow-sm">
           <img
             src={customer.image}
             alt={customer.name}
@@ -23,18 +23,18 @@ export const CustomerDetails = ({ customer }) => {
               {customer.name}
             </h3>
             {customer.isRepeat && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400">
                 <Star className="w-3 h-3" />
                 Repeat
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500 dark:text-[#94A3B8]">
-            <Phone className="w-3 h-3" />
+          <div className="flex items-center gap-1.5 mt-1.5 text-xs text-slate-500 dark:text-[#94A3B8]">
+            <Phone className="w-3 h-3 text-green-600 dark:text-green-400" />
             <span>{customer.phone}</span>
           </div>
-          <div className="flex items-center gap-1.5 mt-0.5 text-xs text-slate-500 dark:text-[#94A3B8]">
-            <Mail className="w-3 h-3" />
+          <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500 dark:text-[#94A3B8]">
+            <Mail className="w-3 h-3 text-green-600 dark:text-green-400" />
             <span className="truncate">{customer.email}</span>
           </div>
         </div>

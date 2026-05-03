@@ -159,6 +159,25 @@ body {
   cursor: default;
 }
 
+/* ── Node Base — solid opaque background so connector line doesn't bleed through */
+
+.timeline-node {
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+:where(.dark) .timeline-node {
+  background-color: #1E293B;
+}
+
+.timeline-step[data-done="true"] .timeline-node {
+  background-color: #dcfce7;
+}
+
+:where(.dark) .timeline-step[data-done="true"] .timeline-node {
+  background-color: #0a2d1a;
+}
+
 /* ── Completed Step Nodes — glow + pop-in ───────────────────────── */
 
 .timeline-step[data-done="true"] .timeline-node {

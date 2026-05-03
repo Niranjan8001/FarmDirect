@@ -13,7 +13,7 @@
 
 ## 🌟 Overview
 
-**Farmer Connect** is a modern agriculture marketplace platform designed to empower farmers by giving them direct control over their products, orders, and earnings—eliminating middlemen and increasing transparency.
+**Farm Direct** is a modern agriculture marketplace platform designed to empower farmers by giving them direct control over their products, orders, and earnings—eliminating middlemen and increasing transparency.
 
 > Built with a focus on **real-world usability**, **clean UI**, and **scalability**.
 

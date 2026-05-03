@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const tabs = [
-  { id: 'all', label: 'All Reviews', count: 48 },
-  { id: 'pending', label: 'Pending', count: 5 },
-  { id: 'published', label: 'Published', count: 42 },
-  { id: 'hidden', label: 'Hidden', count: 1 },
-];
+export const ReviewsTabs = ({ activeTab, setActiveTab, reviews }) => {
+  const getCount = (status) => {
+    if (status === 'all') return reviews.length;
+    return reviews.filter(r => r.status.toLowerCase() === status.toLowerCase()).length;
+  };
 
-export const ReviewsTabs = () => {
-  const [activeTab, setActiveTab] = useState('all');
+  const tabs = [
+    { id: 'all', label: 'All Reviews', count: getCount('all') },
+    { id: 'pending', label: 'Pending', count: getCount('pending') },
+    { id: 'published', label: 'Published', count: getCount('published') },
+    { id: 'hidden', label: 'Hidden', count: getCount('hidden') },
+  ];
 
   return (
     <div className="border-b border-slate-200 dark:border-[#334155] mb-6 overflow-x-auto hide-scrollbar">

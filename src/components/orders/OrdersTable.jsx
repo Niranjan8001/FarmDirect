@@ -2,18 +2,7 @@ import React from 'react';
 import { Eye, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const ordersData = [
-  { id: '#ORD1256', customer: 'Priya Sharma', location: 'Jaipur, RJ', product: 'Fresh Tomatoes', weight: '5 kg', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop', quantity: '5 kg', amount: '₹125', date: 'May 22, 2024', time: '10:30 AM', status: 'Delivered', payment: 'Paid' },
-  { id: '#ORD1255', customer: 'Amit Verma', location: 'Jaipur, RJ', product: 'Cucumbers', weight: '3 kg', img: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop', quantity: '3 kg', amount: '₹60', date: 'May 22, 2024', time: '09:15 AM', status: 'Processing', payment: 'Paid' },
-  { id: '#ORD1254', customer: 'Neha Singh', location: 'Sikar, RJ', product: 'Potatoes', weight: '10 kg', img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop', quantity: '10 kg', amount: '₹180', date: 'May 21, 2024', time: '07:45 PM', status: 'Shipped', payment: 'Paid' },
-  { id: '#ORD1253', customer: 'Rahul Mehta', location: 'Ajmer, RJ', product: 'Red Onions', weight: '5 kg', img: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop', quantity: '5 kg', amount: '₹110', date: 'May 21, 2024', time: '04:30 PM', status: 'Confirmed', payment: 'COD' },
-  { id: '#ORD1252', customer: 'Sunita Joshi', location: 'Jaipur, RJ', product: 'Whole Wheat', weight: '5 kg', img: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop', quantity: '5 kg', amount: '₹120', date: 'May 20, 2024', time: '11:20 AM', status: 'Delivered', payment: 'Paid' },
-  { id: '#ORD1251', customer: 'Vikram Patel', location: 'Tonk, RJ', product: 'Green Chilies', weight: '250 g', img: 'https://images.unsplash.com/photo-1588144210663-8f0a2021fb2e?w=100&h=100&fit=crop', quantity: '250 g', amount: '₹25', date: 'May 20, 2024', time: '08:10 AM', status: 'Delivered', payment: 'Paid' },
-  { id: '#ORD1250', customer: 'Pooja Meena', location: 'Jaipur, RJ', product: 'Mustard Oil', weight: '1 L', img: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=100&h=100&fit=crop', quantity: '1 L', amount: '₹180', date: 'May 19, 2024', time: '06:35 PM', status: 'Cancelled', payment: 'Refunded' },
-  { id: '#ORD1249', customer: 'Mohit Kumar', location: 'Jaipur, RJ', product: 'Fresh Tomatoes', weight: '3 kg', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop', quantity: '3 kg', amount: '₹75', date: 'May 19, 2024', time: '02:40 PM', status: 'Pending', payment: 'Paid' },
-];
-
-export const OrdersTable = () => {
+export const OrdersTable = ({ orders }) => {
   const navigate = useNavigate();
 
   return (
@@ -34,11 +23,11 @@ export const OrdersTable = () => {
             </tr>
           </thead>
           <tbody>
-            {ordersData.map((order, index) => (
+            {orders.map((order, index) => (
               <tr 
                 key={order.id} 
                 className={`group hover:bg-slate-50 dark:hover:bg-[#0F172A] transition-colors ${
-                  index !== ordersData.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''
+                  index !== orders.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''
                 }`}
               >
                 <td className="py-3 px-6">

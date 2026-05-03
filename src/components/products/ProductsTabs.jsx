@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const tabs = [
-  { id: 'all', label: 'All Products', count: 12 },
-  { id: 'active', label: 'Active', count: 10 },
-  { id: 'upcoming', label: 'Upcoming', count: 2 },
-  { id: 'low-stock', label: 'Low Stock', count: 1 },
-  { id: 'out-of-stock', label: 'Out of Stock', count: 1 },
-  { id: 'inactive', label: 'Inactive', count: 0 },
-];
+export const ProductsTabs = ({ activeTab, setActiveTab, products }) => {
+  const getCount = (id) => {
+    if (id === 'all') return products.length;
+    if (id === 'active') return products.filter(p => p.status === 'Active').length;
+    if (id === 'low-stock') return products.filter(p => p.status === 'Low Stock').length;
+    if (id === 'out-of-stock') return products.filter(p => p.status === 'Out of Stock').length;
+    return 0;
+  };
 
-export const ProductsTabs = () => {
-  const [activeTab, setActiveTab] = useState('all');
+  const tabs = [
+    { id: 'all', label: 'All Products', count: getCount('all') },
+    { id: 'active', label: 'Active', count: getCount('active') },
+    { id: 'upcoming', label: 'Upcoming', count: getCount('upcoming') },
+    { id: 'low-stock', label: 'Low Stock', count: getCount('low-stock') },
+    { id: 'out-of-stock', label: 'Out of Stock', count: getCount('out-of-stock') },
+    { id: 'inactive', label: 'Inactive', count: getCount('inactive') },
+  ];
 
   return (
     <div className="border-b border-slate-200 dark:border-[#334155] mb-6 overflow-x-auto hide-scrollbar">

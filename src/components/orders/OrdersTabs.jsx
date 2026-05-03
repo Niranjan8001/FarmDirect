@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const tabs = [
-  { id: 'all', label: 'All Orders', count: 32 },
-  { id: 'pending', label: 'Pending', count: 5 },
-  { id: 'confirmed', label: 'Confirmed', count: 8 },
-  { id: 'processing', label: 'Processing', count: 6 },
-  { id: 'shipped', label: 'Shipped', count: 9 },
-  { id: 'delivered', label: 'Delivered', count: 10 },
-  { id: 'cancelled', label: 'Cancelled', count: 2 },
-];
+export const OrdersTabs = ({ activeTab, setActiveTab, orders }) => {
+  const getCount = (status) => {
+    if (status === 'all') return orders.length;
+    return orders.filter(order => order.status.toLowerCase() === status.toLowerCase()).length;
+  };
 
-export const OrdersTabs = () => {
-  const [activeTab, setActiveTab] = useState('all');
+  const tabs = [
+    { id: 'all', label: 'All Orders', count: getCount('all') },
+    { id: 'pending', label: 'Pending', count: getCount('pending') },
+    { id: 'confirmed', label: 'Confirmed', count: getCount('confirmed') },
+    { id: 'processing', label: 'Processing', count: getCount('processing') },
+    { id: 'shipped', label: 'Shipped', count: getCount('shipped') },
+    { id: 'delivered', label: 'Delivered', count: getCount('delivered') },
+    { id: 'cancelled', label: 'Cancelled', count: getCount('cancelled') },
+  ];
 
   return (
     <div className="border-b border-slate-200 dark:border-[#334155] mb-6 overflow-x-auto hide-scrollbar">

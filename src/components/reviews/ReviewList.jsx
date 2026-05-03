@@ -1,14 +1,6 @@
 import React from 'react';
 import { Star, MoreVertical, Reply, Eye, Check, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 
-const reviewsData = [
-  { id: 1, customer: 'Priya Sharma', rating: 5, time: '2 days ago', status: 'Published', date: 'May 22, 2024', product: 'Farm Fresh Tomatoes', weight: '5 kg', text: 'Very fresh and juicy tomatoes! You can really taste the freshness. Packaging was also good.', img: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop', customerImg: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop' },
-  { id: 2, customer: 'Amit Verma', rating: 4, time: '3 days ago', status: 'Published', date: 'May 22, 2024', product: 'Cucumbers', weight: '3 kg', text: 'Cucumbers were fresh and crunchy. Good quality and value for money. Will order again!', img: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop', customerImg: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop' },
-  { id: 3, customer: 'Neha Singh', rating: 5, time: '5 days ago', status: 'Published', date: 'May 21, 2024', product: 'Potatoes', weight: '10 kg', text: 'Potatoes are of excellent quality. Clean and well-packed.', img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop', customerImg: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop' },
-  { id: 4, customer: 'Rahul Mehta', rating: 3, time: '6 days ago', status: 'Pending', date: 'May 21, 2024', product: 'Red Onions', weight: '5 kg', text: 'Onions were fresh but a few were slightly small in size. Overall good experience.', img: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop', customerImg: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop' },
-  { id: 5, customer: 'Sunita Joshi', rating: 5, time: '1 week ago', status: 'Published', date: 'May 20, 2024', product: 'Whole Wheat', weight: '5 kg', text: 'Whole wheat is very good. Wheat flour is soft and perfect for daily use.', img: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop', customerImg: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop' },
-];
-
 const RatingStars = ({ rating }) => (
   <div className="flex items-center gap-0.5">
     {[...Array(5)].map((_, i) => (
@@ -20,12 +12,12 @@ const RatingStars = ({ rating }) => (
   </div>
 );
 
-export const ReviewList = () => {
+export const ReviewList = ({ reviews }) => {
   return (
     <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden flex flex-col">
       <div className="flex-grow">
-        {reviewsData.map((review, index) => (
-          <div key={review.id} className={`p-6 hover:bg-slate-50/50 dark:hover:bg-[#0F172A]/30 transition-colors ${index !== reviewsData.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''}`}>
+        {reviews.map((review, index) => (
+          <div key={review.id} className={`p-6 hover:bg-slate-50/50 dark:hover:bg-[#0F172A]/30 transition-colors ${index !== reviews.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''}`}>
             <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
               
               {/* Left Column: Customer & Review */}

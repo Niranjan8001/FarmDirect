@@ -1,17 +1,7 @@
 import React from 'react';
 import { MoreVertical, Edit2, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 
-const productsData = [
-  { id: 1, name: 'Farm Fresh Tomatoes', weight: '2 kg', price: '₹60', unit: '/ kg', stock: '120 kg', sold: '75 kg', status: 'Active', image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop' },
-  { id: 2, name: 'Cucumbers', weight: '1 kg', price: '₹40', unit: '/ kg', stock: '85 kg', sold: '40 kg', status: 'Active', image: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop' },
-  { id: 3, name: 'Red Onions', weight: '1 kg', price: '₹35', unit: '/ kg', stock: '60 kg', sold: '25 kg', status: 'Active', image: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop' },
-  { id: 4, name: 'Whole Wheat', weight: '5 kg', price: '₹120', unit: '/ kg', stock: '200 kg', sold: '60 kg', status: 'Active', image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop' },
-  { id: 5, name: 'Potatoes', weight: '2 kg', price: '₹30', unit: '/ kg', stock: '150 kg', sold: '30 kg', status: 'Low Stock', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop' },
-  { id: 6, name: 'Green Chilies', weight: '250 g', price: '₹25', unit: '/ 250g', stock: '0 kg', sold: '15 kg', status: 'Out of Stock', image: 'https://images.unsplash.com/photo-1588144210663-8f0a2021fb2e?w=100&h=100&fit=crop' },
-  { id: 7, name: 'Mustard Oil', weight: '1 L', price: '₹180', unit: '/ L', stock: '25 L', sold: '10 L', status: 'Active', image: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=100&h=100&fit=crop' },
-];
-
-export const ProductsTable = () => {
+export const ProductsTable = ({ products }) => {
   return (
     <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden flex flex-col">
       <div className="overflow-x-auto">
@@ -27,11 +17,11 @@ export const ProductsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {productsData.map((product, index) => (
+            {products.map((product, index) => (
               <tr 
                 key={product.id} 
                 className={`group hover:bg-slate-50 dark:hover:bg-[#0F172A] transition-colors ${
-                  index !== productsData.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''
+                  index !== products.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''
                 }`}
               >
                 <td className="py-4 px-6">

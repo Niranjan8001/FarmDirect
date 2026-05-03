@@ -1,5 +1,12 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup } from 'firebase/auth';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithRedirect, 
+  getRedirectResult,
+  RecaptchaVerifier, 
+  signInWithPhoneNumber 
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,16 +22,14 @@ if (!firebaseConfig.apiKey) {
   console.error("Firebase API key is missing! Please check your environment variables.");
 }
 
-if (import.meta.env.DEV) {
-  console.log("Firebase Configuration loaded:", {
-    ...firebaseConfig,
-    apiKey: firebaseConfig.apiKey ? "PRESENT" : "MISSING"
-  });
-}
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase (Singleton pattern)
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-export { RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup };
+// Standard OAuth behavior settings
+googleProvider.setCustomParameters({
+  prompt: 'select_account'
+});
+
+export { RecaptchaVerifier, signInWithPhoneNumber, signInWithRedirect, getRedirectResult };

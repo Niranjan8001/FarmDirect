@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { auth, googleProvider, signInWithPopup, signInWithPhoneNumber, RecaptchaVerifier } from '../lib/firebase';
+import { auth, googleProvider, signInWithRedirect, getRedirectResult, signInWithPhoneNumber, RecaptchaVerifier } from '../lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const FarmerContext = createContext();
@@ -26,14 +26,39 @@ export const FarmerProvider = ({ children }) => {
     { id: 103, productId: 3, productName: 'Apples', quantity: 2, customerName: 'Priya Verma', status: 'Delivered', total: 240, date: new Date(Date.now() - 172800000).toISOString() },
   ]);
 
+  // Handle Redirect Result on Mount
+  useEffect(() => {
+    const handleRedirect = async () => {
+      try {
+        setLoading(true);
+        console.log('Checking for redirect result...');
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          console.log('Redirect login successful:', result.user.email);
+          setIsAuthenticated(true);
+          setCurrentUser(result.user);
+        }
+      } catch (err) {
+        console.error('Redirect login error:', err);
+        setError('Google login failed. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    handleRedirect();
+  }, []);
+
   // Listen for Auth changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        console.log('Auth state changed: User is logged in', user.email);
         setIsAuthenticated(true);
         setCurrentUser(user);
         fetchProducts();
       } else {
+        console.log('Auth state changed: No user');
         setIsAuthenticated(false);
         setCurrentUser(null);
         setProducts([]);
@@ -74,12 +99,16 @@ export const FarmerProvider = ({ children }) => {
 
   const login = async (type = 'google', data = {}) => {
     try {
+      setLoading(true);
+      setError(null);
+      
       if (type === 'google') {
-        await signInWithPopup(auth, googleProvider);
+        console.log('Starting Google Redirect login flow...');
+        await signInWithRedirect(auth, googleProvider);
         return true;
       }
-      // Phone login would need more complex state handling for the verification code
-      // For now, let's just support Google or simple mock for testing
+
+      // Phone login (Mock for now)
       if (data.phone && data.otp === '1234') {
         setIsAuthenticated(true);
         setCurrentUser({ name: 'Mock Farmer', phone: data.phone });
@@ -88,7 +117,11 @@ export const FarmerProvider = ({ children }) => {
       return false;
     } catch (err) {
       console.error('Login error:', err);
+      setError('Authentication failed. Please try again.');
       return false;
+    } finally {
+      // Don't set loading false for redirect as page will change
+      if (type !== 'google') setLoading(false);
     }
   };
 

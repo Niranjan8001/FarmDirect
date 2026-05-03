@@ -15,8 +15,7 @@ import {
   Lock 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import farmBackground from '../assets/farm_sunrise.png';
-import agriTechGraphic from '../assets/agri_tech_graphic.png';
+import farmBackground from '../assets/farm_background_v2.png';
 
 export const Login = () => {
   const [phone, setPhone] = useState('');
@@ -108,7 +107,7 @@ export const Login = () => {
         </button>
       </div>
 
-      <div className="relative z-10 login-grid items-center px-4 md:px-12 lg:px-24">
+      <div className="relative z-10 grid lg:grid-cols-2 items-center min-h-screen px-4 md:px-12 lg:px-24 gap-12">
         
         {/* Left Section: Hero Text */}
         <div className="hidden lg:flex flex-col gap-8 animate-fade-in-up">
@@ -257,17 +256,6 @@ export const Login = () => {
           </div>
         </div>
 
-        {/* Right Section: Tech Graphic */}
-        <div className="hidden lg:flex justify-end animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <div className="relative">
-            <div className="absolute inset-0 bg-green-400/20 blur-[100px] rounded-full"></div>
-            <img 
-              src={agriTechGraphic} 
-              alt="Decorative Tech" 
-              className="w-[400px] h-[400px] object-contain relative z-10 opacity-80"
-            />
-          </div>
-        </div>
 
       </div>
     </div>

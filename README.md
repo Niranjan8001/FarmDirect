@@ -1,4 +1,4 @@
-# 🌾 Farmer Connect
+# 🌾 Farm Direct
 
 ### 🚀 Smart Agriculture Marketplace Platform
 

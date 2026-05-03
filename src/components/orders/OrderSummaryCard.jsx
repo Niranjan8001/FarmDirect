@@ -96,49 +96,73 @@ export const OrderSummaryCard = ({ order }) => {
       {/* ── Integrated Horizontal Timeline ─────────────────────── */}
       <div className="mt-6 pt-6 border-t border-slate-100 dark:border-[#334155]">
         {/* Desktop: Horizontal */}
-        <div className="hidden sm:block">
-          <div className="relative flex items-start justify-between">
-            {/* Background connecting line */}
-            <div className="absolute top-5 left-[12.5%] right-[12.5%] h-[2px] bg-slate-200 dark:bg-[#334155] z-0" />
-            {/* Active connecting line */}
-            <div
-              className="absolute top-5 left-[12.5%] h-[2px] bg-green-500 dark:bg-green-400 z-0 transition-all duration-500"
-              style={{
-                width: isCancelled
-                  ? '0%'
-                  : `${Math.max(0, (Math.min(activeIdx, 4) - 1) / (timelineSteps.length - 1)) * 75}%`,
-              }}
-            />
-
-            {timelineSteps.map((step, i) => {
-              const stepData = order.timeline[step.key];
-              const done = !isCancelled && stepData?.done;
-              const StepIcon = step.icon;
-
-              return (
-                <div key={step.key} className="flex flex-col items-center text-center relative z-10" style={{ width: '25%' }}>
+        <div className="hidden sm:block overflow-hidden px-2">
+          <div className="relative">
+            {/* ── Connecting Lines (behind the nodes) ────────────── */}
+            <div className="absolute top-5 left-0 right-0 flex items-center z-0 px-[60px]">
+              {[0, 1, 2].map((segIdx) => {
+                const segDone = !isCancelled && order.timeline[timelineSteps[segIdx].key]?.done && order.timeline[timelineSteps[segIdx + 1].key]?.done;
+                const segPartial = !isCancelled && order.timeline[timelineSteps[segIdx].key]?.done && !order.timeline[timelineSteps[segIdx + 1].key]?.done;
+                return (
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border-2 ${
-                      isCancelled
-                        ? 'bg-red-50 dark:bg-red-500/10 text-red-400 dark:text-red-400/50 border-red-200 dark:border-red-500/20'
-                        : done
-                        ? 'bg-green-50 dark:bg-green-500/15 text-green-600 dark:text-green-400 border-green-500 dark:border-green-400 shadow-md shadow-green-500/10'
-                        : 'bg-white dark:bg-[#0F172A] text-slate-400 dark:text-slate-500 border-slate-200 dark:border-[#334155]'
-                    }`}
+                    key={segIdx}
+                    className="timeline-connector flex-1 h-[2px] relative"
+                    data-segment={segIdx}
+                    data-done={segDone}
                   >
-                    <StepIcon className="w-[18px] h-[18px]" />
+                    {/* Background track */}
+                    <div className="absolute inset-0 bg-slate-200 dark:bg-[#334155] rounded-full" />
+                    {/* Active fill */}
+                    <div
+                      className={`absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out ${
+                        isCancelled
+                          ? 'bg-red-300 dark:bg-red-500/30'
+                          : 'bg-green-500 dark:bg-green-400'
+                      }`}
+                      style={{ width: segDone ? '100%' : segPartial ? '50%' : '0%' }}
+                    />
                   </div>
-                  <p className={`text-xs font-semibold mt-2 ${
-                    done ? 'text-green-600 dark:text-green-400' : 'text-slate-400 dark:text-slate-500'
-                  }`}>
-                    {step.label}
-                  </p>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 max-w-[120px] leading-tight">
-                    {done && stepData.date ? stepData.date : '—'}
-                  </p>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+
+            {/* ── Step Nodes ─────────────────────────────────────── */}
+            <div className="relative z-10 grid grid-cols-4 gap-0">
+              {timelineSteps.map((step, i) => {
+                const stepData = order.timeline[step.key];
+                const done = !isCancelled && stepData?.done;
+                const StepIcon = step.icon;
+
+                return (
+                  <div
+                    key={step.key}
+                    className="timeline-step flex flex-col items-center text-center"
+                    data-step={i}
+                    data-done={done}
+                  >
+                    <div
+                      className={`timeline-node w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
+                        isCancelled
+                          ? 'bg-red-50 dark:bg-red-500/10 text-red-400 dark:text-red-400/50 border-red-200 dark:border-red-500/20'
+                          : done
+                          ? 'bg-green-50 dark:bg-green-500/15 text-green-600 dark:text-green-400 border-green-500 dark:border-green-400 shadow-md shadow-green-500/10'
+                          : 'bg-white dark:bg-[#0F172A] text-slate-400 dark:text-slate-500 border-slate-200 dark:border-[#334155]'
+                      }`}
+                    >
+                      <StepIcon className="w-[18px] h-[18px]" />
+                    </div>
+                    <p className={`timeline-label text-[11px] font-semibold mt-2.5 whitespace-nowrap ${
+                      done ? 'text-green-600 dark:text-green-400' : 'text-slate-400 dark:text-slate-500'
+                    }`}>
+                      {step.label}
+                    </p>
+                    <p className="timeline-date text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 whitespace-nowrap leading-tight">
+                      {done && stepData.date ? stepData.date : '—'}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -151,10 +175,10 @@ export const OrderSummaryCard = ({ order }) => {
             const StepIcon = step.icon;
 
             return (
-              <div key={step.key} className="flex gap-3">
+              <div key={step.key} className="timeline-step flex gap-3" data-step={i} data-done={done}>
                 <div className="flex flex-col items-center">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all ${
+                    className={`timeline-node w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-500 ${
                       isCancelled
                         ? 'bg-red-50 dark:bg-red-500/10 text-red-400 dark:text-red-400/50 border-red-200 dark:border-red-500/20'
                         : done
@@ -165,22 +189,22 @@ export const OrderSummaryCard = ({ order }) => {
                     <StepIcon className="w-4 h-4" />
                   </div>
                   {!isLast && (
-                    <div className={`w-0.5 flex-1 min-h-[24px] ${
+                    <div className={`timeline-connector w-0.5 flex-1 min-h-[24px] transition-all duration-700 ${
                       isCancelled
                         ? 'bg-red-200 dark:bg-red-500/20'
                         : done
                         ? 'bg-green-400 dark:bg-green-500/40'
                         : 'bg-slate-200 dark:bg-[#334155]'
-                    }`} />
+                    }`} data-segment={i} data-done={done} />
                   )}
                 </div>
                 <div className={`pb-5 ${isLast ? 'pb-0' : ''}`}>
-                  <p className={`text-sm font-semibold ${
+                  <p className={`timeline-label text-sm font-semibold ${
                     done ? 'text-green-600 dark:text-green-400' : 'text-slate-400 dark:text-slate-500'
                   }`}>
                     {step.label}
                   </p>
-                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                  <p className="timeline-date text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                     {done && stepData.date ? stepData.date : '—'}
                   </p>
                 </div>

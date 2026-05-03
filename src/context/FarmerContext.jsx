@@ -1,24 +1,24 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { auth, googleProvider, signInWithPopup, signInWithPhoneNumber, RecaptchaVerifier } from '../lib/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const FarmerContext = createContext();
 
 export const useFarmerContext = () => useContext(FarmerContext);
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const FarmerProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [language, setLanguage] = useState('English');
   const [currentUser, setCurrentUser] = useState(null);
   const [isDark, setIsDark] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const toggleTheme = () => setIsDark(!isDark);
   
-  // Mock Products (Inventory)
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Tomatoes', category: 'Vegetables', price: 40, quantity: 50, image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200&h=200&fit=crop' },
-    { id: 2, name: 'Potatoes', category: 'Vegetables', price: 30, quantity: 100, image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200&h=200&fit=crop' },
-    { id: 3, name: 'Apples', category: 'Fruits', price: 120, quantity: 20, image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6faa6?w=200&h=200&fit=crop' },
-  ]);
-
   // Mock Orders
   const [orders, setOrders] = useState([
     { id: 101, productId: 1, productName: 'Tomatoes', quantity: 5, customerName: 'Ramesh Singh', status: 'Pending', total: 200, date: new Date().toISOString() },
@@ -26,27 +26,110 @@ export const FarmerProvider = ({ children }) => {
     { id: 103, productId: 3, productName: 'Apples', quantity: 2, customerName: 'Priya Verma', status: 'Delivered', total: 240, date: new Date(Date.now() - 172800000).toISOString() },
   ]);
 
-  const login = (phoneNumber, otp) => {
-    // Mock login logic
-    if (phoneNumber && otp === '1234') {
-      setIsAuthenticated(true);
-      setCurrentUser({ phoneNumber, name: 'Mock Farmer' });
-      return true;
+  // Listen for Auth changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+        setCurrentUser(user);
+        fetchProducts();
+      } else {
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        setProducts([]);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/products`);
+      const result = await response.json();
+      if (result.success) {
+        // Map backend fields to frontend fields
+        const mappedProducts = result.data.map(p => ({
+          id: p._id,
+          name: p.title,
+          category: p.category,
+          price: `₹${p.price}`,
+          stock: `${p.stock} kg`,
+          quantity: p.stock,
+          image: p.images && p.images.length > 0 ? p.images[0] : 'https://images.unsplash.com/photo-1595858602621-eebcbcd83e1c?w=400&h=400&fit=crop',
+          status: p.stock > 10 ? 'Active' : p.stock > 0 ? 'Low Stock' : 'Out of Stock',
+          sold: '0 kg', // Mock for now
+          unit: '/ kg',
+          weight: '1 kg'
+        }));
+        setProducts(mappedProducts);
+      }
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      setError('Failed to load products');
+    } finally {
+      setLoading(false);
     }
-    return false;
+  };
+
+  const login = async (type = 'google', data = {}) => {
+    try {
+      if (type === 'google') {
+        await signInWithPopup(auth, googleProvider);
+        return true;
+      }
+      // Phone login would need more complex state handling for the verification code
+      // For now, let's just support Google or simple mock for testing
+      if (data.phone && data.otp === '1234') {
+        setIsAuthenticated(true);
+        setCurrentUser({ name: 'Mock Farmer', phone: data.phone });
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Login error:', err);
+      return false;
+    }
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
-    setCurrentUser(null);
+    signOut(auth);
   };
 
-  const addProduct = (product) => {
-    setProducts([...products, { ...product, id: Date.now() }]);
+  const addProduct = async (productData) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('Not authenticated');
+
+      const token = await user.getIdToken();
+      
+      // Since we might be sending images later, let's use FormData if it's a file upload, 
+      // but for now AddProduct sends JSON.
+      const response = await fetch(`${API_URL}/products`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(productData)
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log('API Response:', result);
+        await fetchProducts(); // Re-fetch to get the updated list
+        return result.data;
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (err) {
+      console.error('Add product error:', err);
+      throw err;
+    }
   };
 
   const updateProductQuantity = (id, newQuantity) => {
-    setProducts(products.map(p => p.id === id ? { ...p, quantity: newQuantity } : p));
+    setProducts(products.map(p => p.id === id ? { ...p, quantity: newQuantity, stock: newQuantity } : p));
   };
 
   const updateOrderStatus = (id, status) => {
@@ -71,6 +154,9 @@ export const FarmerProvider = ({ children }) => {
       login,
       logout,
       products,
+      loading,
+      error,
+      fetchProducts,
       addProduct,
       updateProductQuantity,
       orders,

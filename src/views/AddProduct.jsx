@@ -54,24 +54,35 @@ export const AddProduct = () => {
     quantity: ''
   });
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.price || !formData.quantity) return;
 
-    addProduct({
-      ...formData,
-      price: Number(formData.price),
-      quantity: Number(formData.quantity),
-      image: 'https://images.unsplash.com/photo-1595858602621-eebcbcd83e1c?w=400&h=400&fit=crop'
-    });
+    try {
+      setLoading(true);
+      setError(null);
+      
+      await addProduct({
+        ...formData,
+        price: Number(formData.price),
+        quantity: Number(formData.quantity)
+      });
 
-    setSuccess(true);
-    
-    // Redirect after a short delay to show success
-    setTimeout(() => {
-      navigate('/inventory');
-    }, 2000);
+      setSuccess(true);
+      
+      // Redirect after a short delay to show success
+      setTimeout(() => {
+        navigate('/inventory');
+      }, 2000);
+    } catch (err) {
+      console.error('Submit error:', err);
+      setError(err.message || 'Failed to list product. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -88,6 +99,13 @@ export const AddProduct = () => {
           <div className="bg-green-500/10 border border-green-500/20 text-green-500 px-6 py-4 rounded-xl mb-8 flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
             <CheckCircle2 className="w-6 h-6" />
             <span className="font-semibold">Product listed successfully! Redirecting...</span>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-6 py-4 rounded-xl mb-8 flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+            <Info className="w-6 h-6" />
+            <span className="font-semibold">{error}</span>
           </div>
         )}
 
@@ -184,10 +202,15 @@ export const AddProduct = () => {
 
               <button 
                 type="submit" 
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-lg shadow-green-600/20"
+                disabled={loading || success}
+                className={`w-full ${loading || success ? 'bg-slate-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'} text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-lg shadow-green-600/20`}
               >
-                <Package className="w-5 h-5" />
-                <span>List Product</span>
+                {loading ? (
+                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <Package className="w-5 h-5" />
+                )}
+                <span>{loading ? 'Listing...' : 'List Product'}</span>
               </button>
             </form>
           </div>

@@ -1,30 +1,27 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useFarmerContext } from '../context/FarmerContext';
 import { DesktopLayout } from '../components/layout/DesktopLayout';
 import { ProductsHeader } from '../components/products/ProductsHeader';
 import { ProductsTabs } from '../components/products/ProductsTabs';
 import { ProductsFilters } from '../components/products/ProductsFilters';
 import { ProductsTable } from '../components/products/ProductsTable';
 import { ProductsRightPanel } from '../components/products/ProductsRightPanel';
-
-const productsData = [
-  { id: 1, name: 'Farm Fresh Tomatoes', weight: '2 kg', price: '₹60', unit: '/ kg', stock: '120 kg', sold: '75 kg', status: 'Active', category: 'Vegetables', image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop' },
-  { id: 2, name: 'Cucumbers', weight: '1 kg', price: '₹40', unit: '/ kg', stock: '85 kg', sold: '40 kg', status: 'Active', category: 'Vegetables', image: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=100&h=100&fit=crop' },
-  { id: 3, name: 'Red Onions', weight: '1 kg', price: '₹35', unit: '/ kg', stock: '60 kg', sold: '25 kg', status: 'Active', category: 'Vegetables', image: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=100&h=100&fit=crop' },
-  { id: 4, name: 'Whole Wheat', weight: '5 kg', price: '₹120', unit: '/ kg', stock: '200 kg', sold: '60 kg', status: 'Active', category: 'Grains', image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=100&h=100&fit=crop' },
-  { id: 5, name: 'Potatoes', weight: '2 kg', price: '₹30', unit: '/ kg', stock: '150 kg', sold: '30 kg', status: 'Low Stock', category: 'Vegetables', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=100&h=100&fit=crop' },
-  { id: 6, name: 'Green Chilies', weight: '250 g', price: '₹25', unit: '/ 250g', stock: '0 kg', sold: '15 kg', status: 'Out of Stock', category: 'Vegetables', image: 'https://images.unsplash.com/photo-1588144210663-8f0a2021fb2e?w=100&h=100&fit=crop' },
-  { id: 7, name: 'Mustard Oil', weight: '1 L', price: '₹180', unit: '/ L', stock: '25 L', sold: '10 L', status: 'Active', category: 'Oil', image: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=100&h=100&fit=crop' },
-];
+import { Loader2, AlertCircle } from 'lucide-react';
 
 export const ProductsView = () => {
+  const { products, loading, error, fetchProducts } = useFarmerContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('All Categories');
   const [statusFilter, setStatusFilter] = useState('All Status');
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   const filteredProducts = useMemo(() => {
-    return productsData.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return products.filter(product => {
+      const matchesSearch = product.name?.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesTab = activeTab === 'all' || 
                         (activeTab === 'active' && product.status === 'Active') ||
@@ -36,7 +33,7 @@ export const ProductsView = () => {
 
       return matchesSearch && matchesTab && matchesCategory && matchesStatus;
     });
-  }, [searchQuery, activeTab, categoryFilter, statusFilter]);
+  }, [products, searchQuery, activeTab, categoryFilter, statusFilter]);
 
   return (
     <DesktopLayout>
@@ -45,7 +42,7 @@ export const ProductsView = () => {
         {/* Left Content Column */}
         <div className="flex-1 min-w-0">
           <ProductsHeader />
-          <ProductsTabs activeTab={activeTab} setActiveTab={setActiveTab} products={productsData} />
+          <ProductsTabs activeTab={activeTab} setActiveTab={setActiveTab} products={products} />
           <ProductsFilters 
             searchQuery={searchQuery} 
             setSearchQuery={setSearchQuery}
@@ -54,7 +51,27 @@ export const ProductsView = () => {
             statusFilter={statusFilter}
             setStatusFilter={setStatusFilter}
           />
-          <ProductsTable products={filteredProducts} />
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl">
+              <Loader2 className="w-10 h-10 text-green-500 animate-spin mb-4" />
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Loading your products...</p>
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl text-red-500">
+              <AlertCircle className="w-10 h-10 mb-4" />
+              <p className="font-bold text-lg mb-2">Error loading products</p>
+              <p className="text-slate-500 dark:text-slate-400 mb-6">{error}</p>
+              <button 
+                onClick={fetchProducts}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <ProductsTable products={filteredProducts} />
+          )}
         </div>
 
         {/* Right Panel Column */}

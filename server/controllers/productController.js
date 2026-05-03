@@ -3,20 +3,25 @@ import sendResponse from '../utils/response.js';
 
 export const createProduct = async (req, res, next) => {
   try {
-    const { title, price, category, stock } = req.body;
+    const { name, title, price, category, stock, quantity } = req.body;
     const images = req.files ? req.files.map(file => file.path) : [];
+
+    console.log('Creating product with data:', req.body);
+    console.log('User from token:', req.user);
 
     const product = await Product.create({
       farmerId: req.user._id,
-      title,
-      price,
+      title: title || name,
+      price: Number(price),
       category,
-      stock,
+      stock: Number(stock || quantity || 0),
       images,
     });
 
+    console.log('Product created successfully:', product);
     sendResponse(res, 201, true, 'Product created successfully', product);
   } catch (error) {
+    console.error('Error in createProduct:', error);
     next(error);
   }
 };

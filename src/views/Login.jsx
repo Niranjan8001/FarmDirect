@@ -11,6 +11,7 @@ export const Login = () => {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   
   const { login, setLanguage, language, isAuthenticated } = useFarmerContext();
   const navigate = useNavigate();
@@ -30,26 +31,42 @@ export const Login = () => {
       return;
     }
     
-    // Mock OTP send
+    // Mock OTP send for now as full Recaptcha setup is complex for this turn
     setStep(2);
   };
 
-  const handleVerifyOtp = (e) => {
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
     if (!otp) return;
 
-    // Mock verification
-    if (login(phone, otp)) {
-      navigate('/dashboard');
-    } else {
-      setError('Invalid OTP. Please use 1234 for testing.');
+    try {
+      setLoading(true);
+      setError('');
+      const success = await login('phone', { phone, otp });
+      if (success) {
+        navigate('/dashboard');
+      } else {
+        setError('Invalid OTP. Please use 1234 for testing.');
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    // Mock Google Login
-    if (login('GoogleUser', '1234')) {
-      navigate('/dashboard');
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const success = await login('google');
+      if (success) {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError('Google Sign-In failed.');
+    } finally {
+      setLoading(false);
     }
   };
 

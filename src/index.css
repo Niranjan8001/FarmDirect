@@ -106,3 +106,263 @@
 body {
   @apply bg-slate-50 text-slate-900 dark:bg-[#020617] dark:text-[#F8FAFC] transition-colors duration-200;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DELIVERY TIMELINE — PREMIUM ANIMATIONS & VISUAL ENHANCEMENTS
+   Pure CSS only. Targets existing .timeline-* classes and data attrs.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Keyframes ──────────────────────────────────────────────────── */
+
+@keyframes tl-gradient-flow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes tl-node-pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  50%  { transform: scale(1.12); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes tl-pulse-ring {
+  0%   { transform: scale(1); opacity: 0.6; }
+  70%  { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes tl-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.1); }
+}
+
+@keyframes tl-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes tl-connector-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes tl-gradient-flow-v {
+  0%   { background-position: 50% 0%; }
+  100% { background-position: 50% 200%; }
+}
+
+/* ── Step Base — position context + smooth transitions ──────────── */
+
+.timeline-step {
+  position: relative;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
+}
+
+/* ── Completed Step Nodes — glow + pop-in ───────────────────────── */
+
+.timeline-step[data-done="true"] .timeline-node {
+  animation: tl-node-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  box-shadow:
+    0 0 12px rgba(34, 197, 94, 0.3),
+    0 0 24px rgba(34, 197, 94, 0.1);
+}
+
+:where(.dark) .timeline-step[data-done="true"] .timeline-node {
+  box-shadow:
+    0 0 14px rgba(74, 222, 128, 0.25),
+    0 0 28px rgba(74, 222, 128, 0.08);
+}
+
+/* ── Active Step — pulse ring + icon breathing ──────────────────── */
+
+.timeline-step.is-active .timeline-node {
+  position: relative;
+  transform: scale(1.08);
+  box-shadow:
+    0 0 16px rgba(34, 197, 94, 0.35),
+    0 0 32px rgba(34, 197, 94, 0.12);
+}
+
+.timeline-step.is-active .timeline-node::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(34, 197, 94, 0.4);
+  animation: tl-pulse-ring 2s ease-out infinite;
+  pointer-events: none;
+}
+
+:where(.dark) .timeline-step.is-active .timeline-node::after {
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.timeline-step.is-active .timeline-node svg {
+  animation: tl-icon-pulse 2s ease-in-out infinite;
+}
+
+/* ── Upcoming Steps — dimmed ────────────────────────────────────── */
+
+.timeline-step[data-done="false"]:not(.is-active) {
+  opacity: 0.55;
+}
+
+.timeline-step[data-done="false"]:not(.is-active) .timeline-node {
+  backdrop-filter: blur(2px);
+}
+
+/* ── Hover Micro Interactions ───────────────────────────────────── */
+
+.timeline-step:hover {
+  opacity: 1 !important;
+}
+
+.timeline-step:hover .timeline-node {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 14px rgba(34, 197, 94, 0.2),
+    0 0 6px rgba(0, 0, 0, 0.05);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-step.is-active:hover .timeline-node {
+  transform: scale(1.1);
+}
+
+.timeline-step:hover .timeline-label {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+
+.timeline-step:hover .timeline-date {
+  opacity: 1;
+  color: #64748b;
+  transition: all 300ms ease-in-out;
+}
+
+:where(.dark) .timeline-step:hover .timeline-date {
+  color: #94a3b8;
+}
+
+/* ── Active Connector — animated gradient flow ──────────────────── */
+
+.timeline-connector[data-done="true"] > div:last-child,
+.tl-active-fill {
+  background: linear-gradient(
+    90deg,
+    #22c55e 0%,
+    #4ade80 25%,
+    #86efac 50%,
+    #4ade80 75%,
+    #22c55e 100%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: tl-gradient-flow 3s linear infinite;
+}
+
+:where(.dark) .timeline-connector[data-done="true"] > div:last-child,
+:where(.dark) .tl-active-fill {
+  background: linear-gradient(
+    90deg,
+    #16a34a 0%,
+    #4ade80 25%,
+    #86efac 50%,
+    #4ade80 75%,
+    #16a34a 100%
+  ) !important;
+  background-size: 200% 100% !important;
+}
+
+/* Connector grow-in origin */
+.timeline-connector[data-done="true"] > div:last-child {
+  transform-origin: left center;
+}
+
+/* Connector soft shadow */
+.timeline-connector {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.04));
+}
+
+/* Shimmer overlay for partial (in-progress) connector */
+.tl-shimmer-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.tl-shimmer-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  animation: tl-shimmer 2s ease-in-out infinite;
+}
+
+:where(.dark) .tl-shimmer-overlay::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+}
+
+/* ── Mobile Vertical — gradient connector ───────────────────────── */
+
+@media (max-width: 639px) {
+  .timeline-connector[data-done="true"] {
+    background: linear-gradient(
+      180deg,
+      #22c55e 0%,
+      #4ade80 50%,
+      #22c55e 100%
+    ) !important;
+    background-size: 100% 200% !important;
+    animation: tl-gradient-flow-v 3s linear infinite;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.2);
+  }
+
+  :where(.dark) .timeline-connector[data-done="true"] {
+    background: linear-gradient(
+      180deg,
+      #16a34a 0%,
+      #4ade80 50%,
+      #16a34a 100%
+    ) !important;
+    background-size: 100% 200% !important;
+  }
+}
+
+/* ── Staggered Entrance — nodes pop in sequentially ─────────────── */
+
+.timeline-step[data-step="0"] .timeline-node { animation-delay: 0ms; }
+.timeline-step[data-step="1"] .timeline-node { animation-delay: 150ms; }
+.timeline-step[data-step="2"] .timeline-node { animation-delay: 300ms; }
+.timeline-step[data-step="3"] .timeline-node { animation-delay: 450ms; }
+
+/* ── Staggered Entrance — labels fade in sequentially ───────────── */
+
+.timeline-label,
+.timeline-date {
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.timeline-step[data-step="0"] .timeline-label,
+.timeline-step[data-step="0"] .timeline-date { animation-delay: 100ms; }
+.timeline-step[data-step="1"] .timeline-label,
+.timeline-step[data-step="1"] .timeline-date { animation-delay: 250ms; }
+.timeline-step[data-step="2"] .timeline-label,
+.timeline-step[data-step="2"] .timeline-date { animation-delay: 400ms; }
+.timeline-step[data-step="3"] .timeline-label,
+.timeline-step[data-step="3"] .timeline-date { animation-delay: 550ms; }

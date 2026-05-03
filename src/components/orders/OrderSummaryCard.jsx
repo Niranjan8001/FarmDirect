@@ -117,10 +117,14 @@ export const OrderSummaryCard = ({ order }) => {
                       className={`absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out ${
                         isCancelled
                           ? 'bg-red-300 dark:bg-red-500/30'
+                          : segDone
+                          ? 'tl-active-fill'
                           : 'bg-green-500 dark:bg-green-400'
                       }`}
                       style={{ width: segDone ? '100%' : segPartial ? '50%' : '0%' }}
                     />
+                    {/* Shimmer on in-progress segment */}
+                    {segPartial && <div className="tl-shimmer-overlay" />}
                   </div>
                 );
               })}
@@ -131,12 +135,14 @@ export const OrderSummaryCard = ({ order }) => {
               {timelineSteps.map((step, i) => {
                 const stepData = order.timeline[step.key];
                 const done = !isCancelled && stepData?.done;
+                const nextStep = timelineSteps[i + 1];
+                const isActive = done && nextStep && !order.timeline[nextStep.key]?.done;
                 const StepIcon = step.icon;
 
                 return (
                   <div
                     key={step.key}
-                    className="timeline-step flex flex-col items-center text-center"
+                    className={`timeline-step flex flex-col items-center text-center${isActive ? ' is-active' : ''}`}
                     data-step={i}
                     data-done={done}
                   >
@@ -171,11 +177,13 @@ export const OrderSummaryCard = ({ order }) => {
           {timelineSteps.map((step, i) => {
             const stepData = order.timeline[step.key];
             const done = !isCancelled && stepData?.done;
+            const nextStep = timelineSteps[i + 1];
+            const isActive = done && nextStep && !order.timeline[nextStep.key]?.done;
             const isLast = i === timelineSteps.length - 1;
             const StepIcon = step.icon;
 
             return (
-              <div key={step.key} className="timeline-step flex gap-3" data-step={i} data-done={done}>
+              <div key={step.key} className={`timeline-step flex gap-3${isActive ? ' is-active' : ''}`} data-step={i} data-done={done}>
                 <div className="flex flex-col items-center">
                   <div
                     className={`timeline-node w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-500 ${

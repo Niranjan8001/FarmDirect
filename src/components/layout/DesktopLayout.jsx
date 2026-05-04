@@ -43,6 +43,29 @@ const MobileBottomNav = () => {
 export const DesktopLayout = ({ children }) => {
   const { isDark, toggleTheme } = useFarmerContext();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      // Tablet range: 769px to 1024px -> Collapsed Sidebar
+      if (width >= 769 && width <= 1024) {
+        setIsCollapsed(true);
+      } else {
+        setIsCollapsed(false);
+      }
+      
+      if (width > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (isDark) {
@@ -52,78 +75,81 @@ export const DesktopLayout = ({ children }) => {
     }
   }, [isDark]);
 
+  const mainMargin = windowWidth > 768 ? (isCollapsed ? 'ml-20' : 'ml-64') : 'ml-0';
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] transition-colors duration-200 font-sans text-slate-900 dark:text-[#F8FAFC]">
-      <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#020617] transition-all duration-300 font-sans text-slate-900 dark:text-[#F8FAFC]">
+      <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} isCollapsed={isCollapsed} />
       
-      <div className="ml-0 md:ml-64 flex flex-col h-screen">
+      <div className={`${mainMargin} flex flex-col min-h-screen transition-all duration-300`}>
         {/* Global Topbar */}
-        <div className="max-xs:h-14 h-20 flex-shrink-0 max-xs:px-3 px-4 md:px-8 flex items-center justify-between border-b border-transparent">
+        <header className="h-16 tablet:h-20 flex-shrink-0 px-4 tablet:px-8 flex items-center justify-between border-b border-slate-200 dark:border-[#334155] sticky top-0 bg-[#F8FAFC]/80 dark:bg-[#020617]/80 backdrop-blur-md z-40">
           
           {/* Mobile Menu Toggle */}
           <button 
-            className="md:hidden p-2 -ml-2 mr-2 rounded-lg text-slate-600 dark:text-[#94A3B8] hover:bg-slate-100 dark:hover:bg-[#1E293B] transition-colors"
+            className="tablet:hidden p-2 -ml-2 mr-2 rounded-lg text-slate-600 dark:text-[#94A3B8] hover:bg-slate-100 dark:hover:bg-[#1E293B] transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
           >
-            <Menu className="w-6 h-6 max-xs:w-5 max-xs:h-5" />
+            <Menu className="w-6 h-6" />
           </button>
 
-          {/* Search Bar matching the new mockup */}
-          <div className="flex-1 max-w-xl">
-            <div className="relative hidden md:block">
+          {/* Search Bar - Responsive */}
+          <div className="flex-1 max-w-xl mx-4 hidden sm-mobile:block">
+            <div className="relative group">
               <input 
                 type="text" 
-                placeholder="Search products, orders, customers..." 
-                className="w-full bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-lg pl-4 pr-10 py-2 text-sm focus:outline-none focus:border-green-500 dark:focus:border-green-500"
+                placeholder="Search..." 
+                className="w-full bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl pl-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
               />
-              <Search className="absolute right-3 top-2.5 w-4 h-4 text-slate-400" />
+              <Search className="absolute right-3 top-2.5 w-4 h-4 text-slate-400 group-focus-within:text-green-500 transition-colors" />
             </div>
           </div>
 
-          <div className="flex items-center max-xs:gap-2 gap-4 ml-auto">
+          <div className="flex items-center gap-2 tablet:gap-4 ml-auto">
             {/* Theme Toggle */}
             <button 
               onClick={toggleTheme}
-              className="p-2 max-xs:p-1.5 rounded-full border border-slate-200 dark:border-[#334155] text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors"
+              className="p-2 rounded-full border border-slate-200 dark:border-[#334155] text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors"
               aria-label="Toggle theme"
             >
-              {isDark ? <Moon className="w-5 h-5 max-xs:w-4 max-xs:h-4" /> : <Sun className="w-5 h-5 max-xs:w-4 max-xs:h-4" />}
+              {isDark ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </button>
 
             {/* Notifications */}
-            <button className="relative p-2 max-xs:p-1.5 text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] rounded-full transition-colors">
-              <Bell className="w-5 h-5 max-xs:w-4 max-xs:h-4" />
-              <span className="absolute top-1.5 right-1.5 max-xs:top-1 max-xs:right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-white dark:border-[#020617]"></span>
+            <button className="relative p-2 text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-[#1E293B] rounded-full transition-colors">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full border-2 border-[#F8FAFC] dark:border-[#020617]"></span>
             </button>
 
-            {/* Small Profile Info */}
-            <div className="flex items-center gap-3 max-xs:gap-2 ml-2 max-xs:ml-1 pl-4 max-xs:pl-2 border-l border-slate-200 dark:border-[#334155]">
-              <div className="w-10 h-10 max-xs:w-8 max-xs:h-8 rounded-full border-2 border-slate-100 dark:border-[#1E293B] overflow-hidden">
+            {/* Profile Info */}
+            <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-[#334155]">
+              <div className="w-8 h-8 tablet:w-10 tablet:h-10 rounded-full border-2 border-slate-100 dark:border-[#1E293B] overflow-hidden shrink-0">
                 <img 
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150" 
                   alt="Ramesh Yadav" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="hidden sm:block">
+              <div className="hidden desktop:block">
                 <p className="text-sm font-bold text-slate-800 dark:text-[#F8FAFC]">Ramesh Yadav</p>
-                <p className="text-xs text-slate-500 dark:text-[#94A3B8] flex items-center gap-1">
-                  Farmer
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1 opacity-70"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </p>
+                <p className="text-xs text-slate-500 dark:text-[#94A3B8]">Farmer</p>
               </div>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Main Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
-          {children}
-        </div>
+        {/* Main Fluid Content */}
+        <main className="flex-1 overflow-x-hidden">
+          <div className="fluid-container py-6 tablet:py-8">
+            {children}
+          </div>
+        </main>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <MobileBottomNav />
+      {/* Mobile Bottom Navigation (Only for phones) */}
+      <div className="sm-mobile:hidden">
+        <MobileBottomNav />
+      </div>
     </div>
   );
 };

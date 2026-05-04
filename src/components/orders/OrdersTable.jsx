@@ -7,19 +7,19 @@ export const OrdersTable = ({ orders }) => {
 
   return (
     <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden flex flex-col">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left">
+      {/* Desktop & Tablet View (Table) */}
+      <div className="hidden tablet:block overflow-x-auto custom-scrollbar">
+        <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead>
             <tr className="border-b border-slate-100 dark:border-[#334155] bg-slate-50/50 dark:bg-[#0F172A]/50">
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Order ID</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Customer</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Products</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Quantity</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Amount</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Order Date</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Status</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Payment</th>
-              <th className="py-3 px-6 text-xs font-medium text-slate-500 dark:text-[#94A3B8] text-center">Actions</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">Order ID</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">Customer</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">Products</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">Qty</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">Amount</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">Date</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">Status</th>
+              <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8] text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -30,64 +30,35 @@ export const OrdersTable = ({ orders }) => {
                   index !== orders.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''
                 }`}
               >
-                <td className="py-3 px-6">
-                  <span className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.id}</span>
+                <td className="py-4 px-6">
+                  <span className="font-bold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.id}</span>
                 </td>
-                <td className="py-3 px-6">
-                  <p className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.customer}</p>
-                  <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-[#94A3B8] mt-0.5">
-                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <span>{order.location}</span>
-                  </div>
+                <td className="py-4 px-6">
+                  <p className="font-bold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.customer}</p>
+                  <p className="text-xs text-slate-500 dark:text-[#94A3B8] mt-0.5">{order.location}</p>
                 </td>
-                <td className="py-3 px-6">
-                  <div className="flex items-center gap-2">
-                    <img 
-                      src={order.img} 
-                      alt={order.product} 
-                      className="w-8 h-8 rounded-md object-cover border border-slate-200 dark:border-[#334155]"
-                    />
-                    <div>
-                      <p className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.product}</p>
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-3">
+                    <img src={order.img} alt="" className="w-10 h-10 rounded-lg object-cover border border-slate-100 dark:border-[#334155]" />
+                    <div className="min-w-0">
+                      <p className="font-bold text-sm text-slate-800 dark:text-[#F8FAFC] truncate">{order.product}</p>
                       <p className="text-xs text-slate-500 dark:text-[#94A3B8]">{order.weight}</p>
                     </div>
                   </div>
                 </td>
-                <td className="py-3 px-6">
-                  <span className="text-sm text-slate-600 dark:text-[#CBD5E1]">{order.quantity}</span>
+                <td className="py-4 px-6 text-sm">{order.quantity}</td>
+                <td className="py-4 px-6 font-bold text-sm">{order.amount}</td>
+                <td className="py-4 px-6">
+                  <p className="text-sm">{order.date}</p>
+                  <p className="text-xs text-slate-500">{order.time}</p>
                 </td>
-                <td className="py-3 px-6">
-                  <span className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.amount}</span>
+                <td className="py-4 px-6">
+                  <StatusBadge status={order.status} />
                 </td>
-                <td className="py-3 px-6">
-                  <p className="text-sm text-slate-800 dark:text-[#F8FAFC]">{order.date}</p>
-                  <p className="text-xs text-slate-500 dark:text-[#94A3B8] mt-0.5">{order.time}</p>
-                </td>
-                <td className="py-3 px-6">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide ${
-                    order.status === 'Delivered' ? 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400' : 
-                    order.status === 'Processing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400' :
-                    order.status === 'Shipped' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400' :
-                    order.status === 'Confirmed' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' :
-                    order.status === 'Pending' ? 'bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400' :
-                    'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400'
-                  }`}>
-                    {order.status}
-                  </span>
-                </td>
-                <td className="py-3 px-6">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide ${
-                    order.payment === 'Paid' ? 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400' : 
-                    order.payment === 'COD' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400' :
-                    'bg-slate-100 text-slate-700 dark:bg-[#0F172A] dark:text-slate-400'
-                  }`}>
-                    {order.payment}
-                  </span>
-                </td>
-                <td className="py-3 px-6 text-center">
+                <td className="py-4 px-6 text-center">
                   <button 
                     onClick={() => navigate(`/orders/${order.id.replace('#', '')}`)}
-                    className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors inline-flex"
+                    className="p-2 rounded-lg border border-slate-200 dark:border-[#334155] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-all"
                   >
                     <Eye className="w-4 h-4" />
                   </button>
@@ -97,6 +68,56 @@ export const OrdersTable = ({ orders }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Mobile View (Card Layout) */}
+      <div className="tablet:hidden divide-y divide-slate-100 dark:divide-[#334155]">
+        {orders.map((order) => (
+          <div key={order.id} className="p-4 space-y-4 hover:bg-slate-50 dark:hover:bg-[#0F172A] transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.id}</span>
+              <StatusBadge status={order.status} />
+            </div>
+            
+            <div className="flex gap-4">
+              <img src={order.img} alt="" className="w-16 h-16 rounded-xl object-cover border border-slate-100 dark:border-[#334155] shrink-0" />
+              <div className="min-w-0 flex-1">
+                <h4 className="font-bold text-slate-800 dark:text-[#F8FAFC] truncate">{order.product}</h4>
+                <p className="text-xs text-slate-500 dark:text-[#94A3B8] mt-0.5">{order.weight} • {order.quantity} units</p>
+                <p className="font-bold text-green-600 dark:text-green-400 mt-1">{order.amount}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <div className="flex flex-col">
+                <span className="text-xs text-slate-400 uppercase font-bold tracking-wider">Customer</span>
+                <span className="text-sm font-medium text-slate-700 dark:text-[#CBD5E1]">{order.customer}</span>
+              </div>
+              <button 
+                onClick={() => navigate(`/orders/${order.id.replace('#', '')}`)}
+                className="bg-slate-100 dark:bg-[#1E293B] text-slate-600 dark:text-[#94A3B8] px-4 py-2 rounded-lg text-sm font-bold active:scale-95 transition-transform"
+              >
+                View Details
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const StatusBadge = ({ status }) => (
+  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+    status === 'Delivered' ? 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400' : 
+    status === 'Processing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400' :
+    status === 'Shipped' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400' :
+    status === 'Confirmed' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' :
+    status === 'Pending' ? 'bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400' :
+    'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400'
+  }`}>
+    {status}
+  </span>
+);
       
       {/* Pagination Footer */}
       <div className="p-4 border-t border-slate-100 dark:border-[#334155] flex flex-col sm:flex-row items-center justify-between gap-4">

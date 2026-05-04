@@ -55,7 +55,7 @@ const StatCard = ({ icon: Icon, title, value, change, isPositive }) => {
 
 export const StatCards = () => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 max-xs:gap-2.5 gap-5">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 tablet:gap-6">
       <StatCard 
         icon={DollarSign} 
         title="Total Sales" 

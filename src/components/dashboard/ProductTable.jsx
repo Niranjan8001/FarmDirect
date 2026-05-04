@@ -60,57 +60,65 @@ const statusStyles = {
 /* ── Mobile Order Card (shown ≤420px) ─────────────────────────── */
 const MobileOrderCard = ({ order, onClick }) => (
   <div 
-    className="p-3 border-b border-slate-100 dark:border-[#334155] last:border-0 cursor-pointer active:bg-slate-50 dark:active:bg-[#0F172A] transition-colors"
+    className="p-4 border-b border-slate-100 dark:border-[#334155] last:border-0 cursor-pointer active:bg-slate-50 dark:active:bg-[#0F172A] transition-colors"
     onClick={onClick}
   >
-    {/* Top Row: Order ID + Date | Status */}
-    <div className="flex items-center justify-between mb-1.5">
-      <div className="flex items-center gap-2 min-w-0">
-        <span className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.id}</span>
-        <span className="text-[10px] text-slate-400 dark:text-slate-500">·</span>
-        <span className="text-[10px] text-slate-500 dark:text-[#94A3B8] truncate">{order.date}</span>
+    <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center gap-3 min-w-0">
+        <img 
+          src={order.avatar} 
+          alt="" 
+          className="w-10 h-10 rounded-full object-cover border border-slate-100 dark:border-[#334155] shrink-0"
+        />
+        <div className="min-w-0">
+          <span className="font-bold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.customer}</span>
+          <p className="text-[10px] text-slate-500 dark:text-[#94A3B8]">{order.date}</p>
+        </div>
       </div>
-      <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium flex-shrink-0 ml-2 ${statusStyles[order.status]}`}>
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0 ${statusStyles[order.status]}`}>
         {order.status}
       </span>
     </div>
-    {/* Middle: Items (truncated) */}
-    <p className="text-xs text-slate-500 dark:text-slate-400 truncate mb-1">{order.items}</p>
-    {/* Bottom: Total */}
-    <p className="text-sm font-bold text-slate-800 dark:text-[#F8FAFC]">{order.total}</p>
+    <div className="flex justify-between items-end mt-3">
+      <div className="min-w-0 flex-1">
+        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{order.items}</p>
+        <p className="text-sm font-bold text-slate-800 dark:text-[#F8FAFC] mt-0.5">{order.id}</p>
+      </div>
+      <p className="text-lg font-bold text-green-600 dark:text-green-400">{order.total}</p>
+    </div>
   </div>
 );
 
 export const ProductTable = () => {
   const navigate = useNavigate();
   return (
-    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden max-xs:mt-3 mt-6">
-      <div className="flex items-center justify-between max-xs:p-3 p-5 border-b border-slate-100 dark:border-[#334155]">
-        <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC] max-xs:text-sm">Recent Orders</h3>
-        <button onClick={() => navigate('/orders')} className="max-xs:text-xs text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1">
-          View all orders
-          <span>→</span>
+    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-2xl overflow-hidden shadow-sm">
+      <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-[#334155]">
+        <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC] text-sm uppercase tracking-widest text-slate-400">Recent Orders</h3>
+        <button onClick={() => navigate('/orders')} className="text-sm font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1 group transition-colors">
+          View all 
+          <span className="group-hover:translate-x-1 transition-transform">→</span>
         </button>
       </div>
 
-      {/* ── Mobile Stacked Cards (≤420px) ───────────────────────── */}
-      <div className="hidden max-xs:block">
+      {/* ── Mobile View (<769px) ───────────────────────── */}
+      <div className="tablet:hidden divide-y divide-slate-100 dark:divide-[#334155]">
         {recentOrders.map((order) => (
           <MobileOrderCard key={order.id} order={order} onClick={() => navigate(`/orders/${order.id}`)} />
         ))}
       </div>
 
-      {/* ── Desktop/Tablet Table (>420px) ───────────────────────── */}
-      <div className="overflow-x-auto max-xs:hidden">
-        <table className="w-full text-left">
+      {/* ── Desktop View (>=769px) ───────────────────────── */}
+      <div className="overflow-x-auto hidden tablet:block custom-scrollbar">
+        <table className="w-full text-left min-w-[800px]">
           <thead>
-            <tr className="border-b border-slate-100 dark:border-[#334155]">
-              <th className="py-3 px-5 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Order ID</th>
-              <th className="py-3 px-5 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Customer</th>
-              <th className="py-3 px-5 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Items</th>
-              <th className="py-3 px-5 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Total</th>
-              <th className="py-3 px-5 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Status</th>
-              <th className="py-3 px-5 text-xs font-medium text-slate-500 dark:text-[#94A3B8]">Actions</th>
+            <tr className="border-b border-slate-100 dark:border-[#334155] bg-slate-50/50 dark:bg-[#0F172A]/50">
+              <th className="py-4 px-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">Order ID</th>
+              <th className="py-4 px-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">Customer</th>
+              <th className="py-4 px-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">Items</th>
+              <th className="py-4 px-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">Total</th>
+              <th className="py-4 px-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
+              <th className="py-4 px-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -121,40 +129,40 @@ export const ProductTable = () => {
                   index !== recentOrders.length - 1 ? 'border-b border-slate-100 dark:border-[#334155]' : ''
                 }`}
               >
-                <td className="py-3 px-5">
-                  <span className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.id}</span>
-                  <p className="text-xs text-slate-500 dark:text-[#94A3B8] mt-0.5">{order.date}</p>
+                <td className="py-4 px-6">
+                  <span className="font-bold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.id}</span>
+                  <p className="text-[10px] text-slate-400 dark:text-[#94A3B8] mt-0.5 uppercase">{order.date}</p>
                 </td>
-                <td className="py-3 px-5">
+                <td className="py-4 px-6">
                   <div className="flex items-center gap-3">
                     <img 
                       src={order.avatar} 
-                      alt={order.customer} 
-                      className="w-8 h-8 rounded-full object-cover shadow-sm border border-slate-200 dark:border-[#334155]"
+                      alt="" 
+                      className="w-9 h-9 rounded-full object-cover border border-slate-100 dark:border-[#334155] shadow-sm"
                     />
-                    <span className="font-medium text-sm text-slate-700 dark:text-slate-300">{order.customer}</span>
+                    <span className="font-bold text-sm text-slate-700 dark:text-slate-300">{order.customer}</span>
                   </div>
                 </td>
-                <td className="py-3 px-5">
-                  <span className="text-sm text-slate-600 dark:text-slate-300 truncate max-w-[160px] block">{order.items}</span>
+                <td className="py-4 px-6">
+                  <span className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[200px] block">{order.items}</span>
                 </td>
-                <td className="py-3 px-5">
-                  <span className="font-semibold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.total}</span>
+                <td className="py-4 px-6">
+                  <span className="font-bold text-sm text-slate-800 dark:text-[#F8FAFC]">{order.total}</span>
                 </td>
-                <td className="py-3 px-5">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${statusStyles[order.status]}`}>
+                <td className="py-4 px-6">
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusStyles[order.status]}`}>
                     {order.status}
                   </span>
                 </td>
-                <td className="py-3 px-5">
-                  <div className="flex items-center gap-2">
+                <td className="py-4 px-6">
+                  <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button 
                       onClick={() => navigate(`/orders/${order.id}`)}
-                      className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors"
+                      className="p-2 rounded-lg border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-white dark:hover:bg-[#1E293B] transition-all"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
-                    <button className="p-1.5 rounded-md border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-slate-50 dark:hover:bg-[#1E293B] transition-colors">
+                    <button className="p-2 rounded-lg border border-slate-200 dark:border-[#334155] text-slate-400 hover:text-slate-600 dark:hover:text-[#F8FAFC] hover:bg-white dark:hover:bg-[#1E293B] transition-all">
                       <MoreVertical className="w-4 h-4" />
                     </button>
                   </div>

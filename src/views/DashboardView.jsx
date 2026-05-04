@@ -12,37 +12,41 @@ export const DashboardView = () => {
 
   return (
     <DesktopLayout>
-      <div className="max-xs:px-3 max-xs:pb-20 max-xs:gap-3 px-4 md:px-8 pb-8 flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col laptop:flex-row gap-fluid items-start">
         
         {/* Left Content Column */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 w-full">
           {/* Content Header */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-xs:mb-3 mb-6 max-xs:gap-2 gap-4">
+          <div className="flex flex-col sm-mobile:flex-row items-start sm-mobile:items-center justify-between mb-8 gap-4">
             <div className="min-w-0">
-              <h2 className="max-xs:text-lg text-2xl font-bold text-slate-800 dark:text-[#F8FAFC] max-xs:truncate">Good morning, Ramesh! 👋</h2>
-              <p className="text-slate-500 dark:text-[#94A3B8] mt-1 max-xs:text-xs max-xs:line-clamp-1">Here's what's happening with your farm store today.</p>
+              <h2 className="text-fluid-h2 font-bold text-slate-800 dark:text-[#F8FAFC] truncate">Good morning, Ramesh! 👋</h2>
+              <p className="text-fluid-sm text-slate-500 dark:text-[#94A3B8] mt-1">Here's what's happening with your farm store today.</p>
             </div>
             
             <button 
               onClick={() => navigate('/add-product')}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 max-xs:h-10 py-2.5 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors shadow-sm dark:shadow-green-500/20 w-full sm:w-auto max-xs:text-sm"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-green-600/20 active:scale-95 w-full sm-mobile:w-auto text-sm shrink-0"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-5 h-5" />
               <span>Add New Product</span>
             </button>
           </div>
 
-          <div className="max-xs:mb-3 mb-6">
+          <div className="mb-8">
             <StatCards />
           </div>
-          <ProductTable />
+          
+          <div className="mb-8">
+            <ProductTable />
+          </div>
+          
           <BottomBanner />
         </div>
 
         {/* Right Panel Column */}
-        <div className="w-full lg:w-80 flex-shrink-0">
+        <aside className="w-full laptop:w-[320px] desktop:w-[380px] shrink-0 sticky top-28">
           <RightPanel />
-        </div>
+        </aside>
 
       </div>
     </DesktopLayout>

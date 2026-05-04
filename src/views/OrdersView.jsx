@@ -44,10 +44,10 @@ export const OrdersView = () => {
 
   return (
     <DesktopLayout>
-      <div className="px-4 md:px-8 pb-8 flex flex-col lg:flex-row gap-8 mt-6">
+      <div className="flex flex-col laptop:flex-row gap-fluid items-start">
         
         {/* Left Content Column */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 w-full">
           <OrdersHeader />
           <OrdersTabs activeTab={activeTab} setActiveTab={setActiveTab} orders={ordersData} />
           <OrdersFilters 
@@ -62,9 +62,9 @@ export const OrdersView = () => {
         </div>
 
         {/* Right Panel Column */}
-        <div className="w-full lg:w-80 flex-shrink-0">
+        <aside className="w-full laptop:w-[320px] desktop:w-[380px] shrink-0 sticky top-28">
           <OrdersRightPanel />
-        </div>
+        </aside>
 
       </div>
     </DesktopLayout>

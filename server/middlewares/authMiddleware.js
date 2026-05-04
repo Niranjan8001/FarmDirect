@@ -1,8 +1,16 @@
 import { admin } from '../config/firebase.js';
+import { isMockMode } from '../config/mockConfig.js';
+import { mockUsers } from '../mock/mockUsers.js';
 import User from '../models/User.js';
 import sendResponse from '../utils/response.js';
 
 export const verifyToken = async (req, res, next) => {
+  if (isMockMode()) {
+    // Default to mock farmer for testing
+    req.user = mockUsers.find(u => u.role === 'farmer');
+    return next();
+  }
+
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {

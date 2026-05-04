@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 
 import connectDB from './config/db.js';
 import { initFirebase } from './config/firebase.js';
+import { isMockMode, setMockMode } from './config/mockConfig.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 
 import authRoutes from './routes/authRoutes.js';
@@ -13,6 +14,12 @@ import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 
 dotenv.config();
+
+if (process.env.USE_MOCK === 'true') {
+  setMockMode(true);
+}
+
+console.log(`Mock mode status: ${isMockMode()}`);
 
 // Connect to Database
 connectDB();

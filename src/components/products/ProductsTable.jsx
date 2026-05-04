@@ -75,7 +75,7 @@ export const ProductsTable = ({ products }) => {
       {/* Pagination Footer */}
       <div className="p-4 border-t border-slate-100 dark:border-[#334155] flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-sm text-slate-500 dark:text-[#94A3B8]">
-          Showing <span className="font-medium text-slate-800 dark:text-[#F8FAFC]">1</span> to <span className="font-medium text-slate-800 dark:text-[#F8FAFC]">7</span> of <span className="font-medium text-slate-800 dark:text-[#F8FAFC]">12</span> products
+          Showing <span className="font-medium text-slate-800 dark:text-[#F8FAFC]">1</span> to <span className="font-medium text-slate-800 dark:text-[#F8FAFC]">{products.length}</span> of <span className="font-medium text-slate-800 dark:text-[#F8FAFC]">{products.length}</span> products
         </p>
         
         <div className="flex items-center gap-2">

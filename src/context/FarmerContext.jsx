@@ -52,6 +52,18 @@ export const FarmerProvider = ({ children }) => {
 
   // Listen for Auth changes
   useEffect(() => {
+    if (MOCK_MODE) {
+      console.log('[FarmerContext] MOCK_MODE active: Auto-logging in demo farmer');
+      setIsAuthenticated(true);
+      setCurrentUser({
+        displayName: 'Ramesh Yadav',
+        email: 'ramesh@demo.com',
+        photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop'
+      });
+      fetchProducts();
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         console.log('Auth state changed: User is logged in', user.email);
@@ -67,6 +79,8 @@ export const FarmerProvider = ({ children }) => {
     });
     return () => unsubscribe();
   }, []);
+
+  const MOCK_MODE = true;
 
   const MOCK_PRODUCTS = [
     {
@@ -94,16 +108,64 @@ export const FarmerProvider = ({ children }) => {
       sold: '45 kg',
       unit: '/ kg',
       weight: '1 kg'
+    },
+    {
+      id: 'mock-3',
+      name: 'Green Spinach',
+      category: 'Vegetables',
+      price: '₹20',
+      stock: '15 kg',
+      quantity: 15,
+      image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=400&fit=crop',
+      status: 'Active',
+      sold: '8 kg',
+      unit: '/ bunch',
+      weight: '500g'
+    },
+    {
+      id: 'mock-4',
+      name: 'Fresh Carrots',
+      category: 'Vegetables',
+      price: '₹60',
+      stock: '5 kg',
+      quantity: 5,
+      image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400&h=400&fit=crop',
+      status: 'Low Stock',
+      sold: '20 kg',
+      unit: '/ kg',
+      weight: '1 kg'
+    },
+    {
+      id: 'mock-5',
+      name: 'Organic Honey',
+      category: 'Groceries',
+      price: '₹250',
+      stock: '0 kg',
+      quantity: 0,
+      image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=400&fit=crop',
+      status: 'Out of Stock',
+      sold: '10 kg',
+      unit: '/ bottle',
+      weight: '500g'
     }
   ];
 
   const fetchProducts = async () => {
-    if (loading && !isRetrying) return; // Prevent duplicate calls
+    if (loading && !isRetrying) return; 
 
     try {
       setLoading(true);
       setError(null);
       
+      if (MOCK_MODE) {
+        console.log('[FarmerContext] MOCK_MODE is active. Skipping API call.');
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 800));
+        setProducts(MOCK_PRODUCTS);
+        setLoading(false);
+        return;
+      }
+
       const result = await apiService.getProducts();
       
       if (result.success && result.data) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Plus, Package, CheckCircle2, AlertTriangle, XCircle, Camera, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useFarmerContext } from '../../context/FarmerContext';
 
 const SummaryItem = ({ icon: Icon, label, value, iconColor }) => (
   <div className="flex items-center justify-between py-3 border-b border-slate-100 dark:border-[#334155] last:border-0">
@@ -26,6 +27,22 @@ const CategoryItem = ({ icon: Icon, label, value }) => (
 
 export const ProductsRightPanel = () => {
   const navigate = useNavigate();
+  const { products } = useFarmerContext();
+
+  const totalProducts = products.length;
+  const activeProducts = products.filter(p => p.status === 'Active').length;
+  const lowStockProducts = products.filter(p => p.status === 'Low Stock').length;
+  const outOfStockProducts = products.filter(p => p.status === 'Out of Stock').length;
+
+  const categoryCounts = products.reduce((acc, p) => {
+    acc[p.category] = (acc[p.category] || 0) + 1;
+    return acc;
+  }, {});
+
+  const categories = Object.entries(categoryCounts).map(([label, value]) => ({
+    label,
+    value: value.toString()
+  })).sort((a, b) => b.value - a.value);
 
   return (
     <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
@@ -35,10 +52,10 @@ export const ProductsRightPanel = () => {
         <h3 className="font-bold text-slate-800 dark:text-[#F8FAFC] mb-4">Product Summary</h3>
         
         <div className="mb-4">
-          <SummaryItem icon={Package} label="Total Products" value="12" iconColor="text-slate-400" />
-          <SummaryItem icon={CheckCircle2} label="Active Products" value="10" iconColor="text-green-500" />
-          <SummaryItem icon={AlertTriangle} label="Low Stock" value="1" iconColor="text-amber-500" />
-          <SummaryItem icon={XCircle} label="Out of Stock" value="1" iconColor="text-red-500" />
+          <SummaryItem icon={Package} label="Total Products" value={totalProducts} iconColor="text-slate-400" />
+          <SummaryItem icon={CheckCircle2} label="Active Products" value={activeProducts} iconColor="text-green-500" />
+          <SummaryItem icon={AlertTriangle} label="Low Stock" value={lowStockProducts} iconColor="text-amber-500" />
+          <SummaryItem icon={XCircle} label="Out of Stock" value={outOfStockProducts} iconColor="text-red-500" />
         </div>
         
         <button 
@@ -58,13 +75,13 @@ export const ProductsRightPanel = () => {
         </div>
         
         <div className="mb-4">
-          {/* using generic package icon for all as placeholders based on mockup */}
-          <CategoryItem icon={Package} label="Vegetables" value="6" />
-          <CategoryItem icon={Package} label="Grains & Cereals" value="2" />
-          <CategoryItem icon={Package} label="Pulses & Legumes" value="1" />
-          <CategoryItem icon={Package} label="Oils & Ghee" value="1" />
-          <CategoryItem icon={Package} label="Upcoming" value="2" />
-          <CategoryItem icon={Package} label="Others" value="2" />
+          {categories.length > 0 ? (
+            categories.slice(0, 6).map((cat) => (
+              <CategoryItem key={cat.label} icon={Package} label={cat.label} value={cat.value} />
+            ))
+          ) : (
+            <p className="text-xs text-slate-400 text-center py-4">No categories found</p>
+          )}
         </div>
 
         <button className="text-sm font-medium text-green-600 dark:text-green-400 flex items-center gap-1 hover:text-green-700 dark:hover:text-green-300">

@@ -2,11 +2,11 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { auth, googleProvider, signInWithRedirect, getRedirectResult, signInWithPhoneNumber, RecaptchaVerifier } from '../lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
+import { apiService } from '../services/apiService';
+
 const FarmerContext = createContext();
 
 export const useFarmerContext = () => useContext(FarmerContext);
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const FarmerProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,6 +16,7 @@ export const FarmerProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const toggleTheme = () => setIsDark(!isDark);
   
@@ -40,7 +41,7 @@ export const FarmerProvider = ({ children }) => {
         }
       } catch (err) {
         console.error('Redirect login error:', err);
-        setError('Google login failed. Please try again.');
+        setError({ message: 'Google login failed. Please try again.', type: 'auth' });
       } finally {
         setLoading(false);
       }
@@ -97,53 +98,61 @@ export const FarmerProvider = ({ children }) => {
   ];
 
   const fetchProducts = async () => {
+    if (loading && !isRetrying) return; // Prevent duplicate calls
+
     try {
       setLoading(true);
       setError(null);
-      console.log(`Fetching products from: ${API_URL}/products`);
       
-      const response = await fetch(`${API_URL}/products`);
+      const result = await apiService.getProducts();
       
-      if (!response.ok) {
-        throw new Error(`Server responded with status: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      
-      if (result.success && result.data && result.data.length > 0) {
-        // Map backend fields to frontend fields
-        const mappedProducts = result.data.map(p => ({
-          id: p._id,
-          name: p.title || p.name,
-          category: p.category,
-          price: `₹${p.price}`,
-          stock: `${p.stock} kg`,
-          quantity: p.stock,
-          image: p.images && p.images.length > 0 ? p.images[0] : 'https://images.unsplash.com/photo-1595858602621-eebcbcd83e1c?w=400&h=400&fit=crop',
-          status: p.stock > 10 ? 'Active' : p.stock > 0 ? 'Low Stock' : 'Out of Stock',
-          sold: '0 kg',
-          unit: '/ kg',
-          weight: '1 kg'
-        }));
-        setProducts(mappedProducts);
-      } else if (result.success && result.data && result.data.length === 0) {
-        // Success but empty - use mock data if in development or as fallback
-        console.warn('API returned empty product list. Using mock data.');
-        setProducts(MOCK_PRODUCTS);
+      if (result.success && result.data) {
+        if (result.data.length === 0) {
+          console.warn('API returned empty product list. Using mock data.');
+          setProducts(MOCK_PRODUCTS);
+        } else {
+          // Map backend fields to frontend fields
+          const mappedProducts = result.data.map(p => ({
+            id: p._id,
+            name: p.title || p.name,
+            category: p.category,
+            price: `₹${p.price}`,
+            stock: `${p.stock} kg`,
+            quantity: p.stock,
+            image: p.images && p.images.length > 0 ? p.images[0] : 'https://images.unsplash.com/photo-1595858602621-eebcbcd83e1c?w=400&h=400&fit=crop',
+            status: p.stock > 10 ? 'Active' : p.stock > 0 ? 'Low Stock' : 'Out of Stock',
+            sold: '0 kg',
+            unit: '/ kg',
+            weight: '1 kg'
+          }));
+          setProducts(mappedProducts);
+        }
       } else {
         throw new Error(result.message || 'Failed to fetch products');
       }
     } catch (err) {
       console.error('Error fetching products:', err);
-      // Fallback to mock data on error so UI doesn't look broken
+      setError({ 
+        message: err.status === 0 
+          ? 'Network error. Backend might be offline.' 
+          : err.message || 'Failed to load products.',
+        type: 'fetch',
+        status: err.status
+      });
+      
+      // Fallback to mock data on error if no products exist
       if (products.length === 0) {
-        console.log('Falling back to mock products due to error');
         setProducts(MOCK_PRODUCTS);
       }
-      setError('Backend unreachable. Showing demo products.');
     } finally {
       setLoading(false);
+      setIsRetrying(false);
     }
+  };
+
+  const handleRetry = () => {
+    setIsRetrying(true);
+    fetchProducts();
   };
 
   const login = async (type = 'google', data = {}) => {
@@ -166,7 +175,7 @@ export const FarmerProvider = ({ children }) => {
       return false;
     } catch (err) {
       console.error('Login error:', err);
-      setError('Authentication failed. Please try again.');
+      setError({ message: 'Authentication failed. Please try again.', type: 'auth' });
       return false;
     } finally {
       // Don't set loading false for redirect as page will change
@@ -184,22 +193,11 @@ export const FarmerProvider = ({ children }) => {
       if (!user) throw new Error('Not authenticated');
 
       const token = await user.getIdToken();
-      
-      // Since we might be sending images later, let's use FormData if it's a file upload, 
-      // but for now AddProduct sends JSON.
-      const response = await fetch(`${API_URL}/products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(productData)
-      });
+      const result = await apiService.addProduct(productData, token);
 
-      const result = await response.json();
       if (result.success) {
-        console.log('API Response:', result);
-        await fetchProducts(); // Re-fetch to get the updated list
+        console.log('Product added successfully:', result.data);
+        await fetchProducts(); 
         return result.data;
       } else {
         throw new Error(result.message);
@@ -239,6 +237,7 @@ export const FarmerProvider = ({ children }) => {
       loading,
       error,
       fetchProducts,
+      handleRetry,
       addProduct,
       updateProductQuantity,
       orders,

@@ -8,8 +8,10 @@ import { ProductsTable } from '../components/products/ProductsTable';
 import { ProductsRightPanel } from '../components/products/ProductsRightPanel';
 import { Loader2, AlertCircle } from 'lucide-react';
 
+import { LoadingSpinner, ErrorState } from '../components/ui/Feedback';
+
 export const ProductsView = () => {
-  const { products, loading, error, fetchProducts } = useFarmerContext();
+  const { products, loading, error, fetchProducts, handleRetry } = useFarmerContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('All Categories');
@@ -53,22 +55,13 @@ export const ProductsView = () => {
           />
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl">
-              <Loader2 className="w-10 h-10 text-green-500 animate-spin mb-4" />
-              <p className="text-slate-500 dark:text-slate-400 font-medium">Loading your products...</p>
-            </div>
+            <LoadingSpinner message="Loading your products..." />
           ) : error ? (
-            <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl text-red-500">
-              <AlertCircle className="w-10 h-10 mb-4" />
-              <p className="font-bold text-lg mb-2">Error loading products</p>
-              <p className="text-slate-500 dark:text-slate-400 mb-6">{error}</p>
-              <button 
-                onClick={fetchProducts}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-colors"
-              >
-                Try Again
-              </button>
-            </div>
+            <ErrorState 
+              message={error.message} 
+              onRetry={handleRetry} 
+              status={error.status} 
+            />
           ) : (
             <ProductsTable products={filteredProducts} />
           )}

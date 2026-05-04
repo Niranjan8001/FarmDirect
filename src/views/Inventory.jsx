@@ -3,8 +3,10 @@ import { useFarmerContext } from '../context/FarmerContext';
 import { Card } from '../components/ui/Card';
 import { Edit2, Check } from 'lucide-react';
 
+import { LoadingSpinner, ErrorState } from '../components/ui/Feedback';
+
 export const Inventory = () => {
-  const { products, updateProductQuantity } = useFarmerContext();
+  const { products, updateProductQuantity, loading, error, handleRetry } = useFarmerContext();
   const [editingId, setEditingId] = useState(null);
   const [editVal, setEditVal] = useState('');
 
@@ -22,8 +24,22 @@ export const Inventory = () => {
     updateProductQuantity(id, 0);
   };
 
+  if (loading && products.length === 0) {
+    return <LoadingSpinner message="Loading your inventory..." />;
+  }
+
+  if (error && products.length === 0) {
+    return <ErrorState message={error.message} onRetry={handleRetry} status={error.status} />;
+  }
+
   return (
     <div className="p-4 pb-24 space-y-4">
+      {error && (
+        <div className="p-3 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 rounded-xl flex items-center justify-between gap-3 mb-2">
+          <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">{error.message}</p>
+          <button onClick={handleRetry} className="text-[10px] uppercase font-bold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-800/30 px-2 py-1 rounded">Retry</button>
+        </div>
+      )}
       {products.length === 0 ? (
         <div className="text-center text-slate-500 py-10">Your inventory is empty.</div>
       ) : (

@@ -28,7 +28,10 @@ export const createProduct = async (req, res, next) => {
 
 export const getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find().populate('farmerId', 'name location');
+    const { farmerId } = req.query;
+    const filter = farmerId ? { farmerId } : {};
+    
+    const products = await Product.find(filter).populate('farmerId', 'name location');
     sendResponse(res, 200, true, 'Products fetched successfully', products);
   } catch (error) {
     next(error);

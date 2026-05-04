@@ -67,31 +67,80 @@ export const FarmerProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  const MOCK_PRODUCTS = [
+    {
+      id: 'mock-1',
+      name: 'Organic Tomatoes',
+      category: 'Vegetables',
+      price: '₹40',
+      stock: '50 kg',
+      quantity: 50,
+      image: 'https://images.unsplash.com/photo-1595858602621-eebcbcd83e1c?w=400&h=400&fit=crop',
+      status: 'Active',
+      sold: '12 kg',
+      unit: '/ kg',
+      weight: '1 kg'
+    },
+    {
+      id: 'mock-2',
+      name: 'Farm Fresh Potatoes',
+      category: 'Vegetables',
+      price: '₹30',
+      stock: '100 kg',
+      quantity: 100,
+      image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&h=400&fit=crop',
+      status: 'Active',
+      sold: '45 kg',
+      unit: '/ kg',
+      weight: '1 kg'
+    }
+  ];
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
+      setError(null);
+      console.log(`Fetching products from: ${API_URL}/products`);
+      
       const response = await fetch(`${API_URL}/products`);
+      
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+      
       const result = await response.json();
-      if (result.success) {
+      
+      if (result.success && result.data && result.data.length > 0) {
         // Map backend fields to frontend fields
         const mappedProducts = result.data.map(p => ({
           id: p._id,
-          name: p.title,
+          name: p.title || p.name,
           category: p.category,
           price: `₹${p.price}`,
           stock: `${p.stock} kg`,
           quantity: p.stock,
           image: p.images && p.images.length > 0 ? p.images[0] : 'https://images.unsplash.com/photo-1595858602621-eebcbcd83e1c?w=400&h=400&fit=crop',
           status: p.stock > 10 ? 'Active' : p.stock > 0 ? 'Low Stock' : 'Out of Stock',
-          sold: '0 kg', // Mock for now
+          sold: '0 kg',
           unit: '/ kg',
           weight: '1 kg'
         }));
         setProducts(mappedProducts);
+      } else if (result.success && result.data && result.data.length === 0) {
+        // Success but empty - use mock data if in development or as fallback
+        console.warn('API returned empty product list. Using mock data.');
+        setProducts(MOCK_PRODUCTS);
+      } else {
+        throw new Error(result.message || 'Failed to fetch products');
       }
     } catch (err) {
       console.error('Error fetching products:', err);
-      setError('Failed to load products');
+      // Fallback to mock data on error so UI doesn't look broken
+      if (products.length === 0) {
+        console.log('Falling back to mock products due to error');
+        setProducts(MOCK_PRODUCTS);
+      }
+      setError('Backend unreachable. Showing demo products.');
     } finally {
       setLoading(false);
     }

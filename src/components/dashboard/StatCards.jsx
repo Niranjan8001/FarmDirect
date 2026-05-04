@@ -34,14 +34,14 @@ const StatCard = ({ icon: Icon, title, value, change, isPositive }) => {
           <div className="w-16 h-8 flex items-end max-xs:hidden">
             <svg viewBox="0 0 100 30" className="w-full h-full preserve-3d" preserveAspectRatio="none">
                <path 
-                 d="M0,25 C20,20 40,30 60,10 C80,20 100,5" 
+                 d="M0,25 C20,20 40,30 60,10 C80,20 90,10 100,5" 
                  fill="none" 
                  stroke="currentColor" 
                  strokeWidth="3"
                  className="text-green-400 opacity-80"
                />
                <path 
-                 d="M0,25 C20,20 40,30 60,10 C80,20 100,5 L100,30 L0,30 Z" 
+                 d="M0,25 C20,20 40,30 60,10 C80,20 90,10 100,5 L100,30 L0,30 Z" 
                  fill="currentColor" 
                  className="text-green-100 dark:text-green-900/20"
                />

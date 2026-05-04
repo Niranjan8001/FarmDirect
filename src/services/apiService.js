@@ -11,18 +11,26 @@
 const getBaseUrl = () => {
   // Priority 1: Environment variable from Vite
   const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl) return envUrl.replace(/\/$/, ''); // Remove trailing slash
+  const isProd = import.meta.env.PROD;
+
+  console.log(`[API Service] Detection: Environment=${isProd ? 'Production' : 'Development'}`);
+
+  if (envUrl) {
+    console.log(`[API Service] Using VITE_API_URL: ${envUrl}`);
+    return envUrl.replace(/\/$/, '');
+  }
 
   // Priority 2: Auto-detect environment
-  const isProd = import.meta.env.PROD;
   if (isProd) {
-    // If production but VITE_API_URL is missing, we might be on Vercel
-    // and need to use the production backend URL if known, or fallback gracefully.
-    console.warn('VITE_API_URL is missing in production environment!');
-    return 'https://farmdirect-backend.onrender.com/api'; // Example fallback production URL
+    console.error('[API Service] CRITICAL: VITE_API_URL is missing in production! Falling back to backup URL.');
+    // In a real scenario, this fallback should be your actual production API URL
+    const fallback = 'https://farmdirect-backend.onrender.com/api'; 
+    console.log(`[API Service] Fallback URL: ${fallback}`);
+    return fallback;
   }
 
   // Priority 3: Local development fallback
+  console.log('[API Service] No VITE_API_URL found. Falling back to localhost.');
   return 'http://localhost:5000/api';
 };
 
@@ -70,6 +78,7 @@ const fetchWithRetry = async (endpoint, options = {}, retries = MAX_RETRIES, bac
   const timeoutId = setTimeout(() => controller.abort(), options.timeout || DEFAULT_TIMEOUT);
 
   try {
+    console.log(`[API Request] ${options.method || 'GET'} ${url}`);
     const response = await fetch(url, {
       ...options,
       signal: controller.signal,
@@ -83,6 +92,7 @@ const fetchWithRetry = async (endpoint, options = {}, retries = MAX_RETRIES, bac
 
     // Handle non-200 responses
     if (!response.ok) {
+      console.error(`[API Response] Error ${response.status} from ${url}`);
       let errorData;
       try {
         errorData = await response.json();
@@ -95,10 +105,12 @@ const fetchWithRetry = async (endpoint, options = {}, retries = MAX_RETRIES, bac
     // Handle empty responses
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
+      console.log(`[API Response] Success (Non-JSON) from ${url}`);
       return { success: true, data: null };
     }
 
     const result = await response.json();
+    console.log(`[API Response] Success from ${url}`);
     
     // Basic data validation
     if (result === null || typeof result !== 'object') {
@@ -113,20 +125,22 @@ const fetchWithRetry = async (endpoint, options = {}, retries = MAX_RETRIES, bac
     // Handle Timeout / Abort
     if (error.name === 'AbortError') {
       if (retries > 0) {
-        console.warn(`Request timed out. Retrying... (${MAX_RETRIES - retries + 1})`);
+        console.warn(`[API Retry] Request timed out. Retrying... (${MAX_RETRIES - retries + 1}/${MAX_RETRIES}) for ${url}`);
         await new Promise(resolve => setTimeout(resolve, backoff));
         return fetchWithRetry(endpoint, options, retries - 1, backoff * 2);
       }
+      console.error(`[API Error] Request timed out after multiple attempts for ${url}`);
       throw new ApiError('Request timed out after multiple attempts.', 408);
     }
 
     // Handle Network Failures
     if (error instanceof TypeError && error.message === 'Failed to fetch') {
       if (retries > 0) {
-        console.warn(`Network error. Retrying... (${MAX_RETRIES - retries + 1})`);
+        console.warn(`[API Retry] Network error. Retrying... (${MAX_RETRIES - retries + 1}/${MAX_RETRIES}) for ${url}`);
         await new Promise(resolve => setTimeout(resolve, backoff));
         return fetchWithRetry(endpoint, options, retries - 1, backoff * 2);
       }
+      console.error(`[API Error] Cannot connect to the server at ${url}. Possible reasons: Backend down, CORS issues, or incorrect URL.`);
       throw new ApiError('Cannot connect to the server. Please check your internet connection or backend status.', 0);
     }
 

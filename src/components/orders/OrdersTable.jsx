@@ -102,23 +102,7 @@ export const OrdersTable = ({ orders }) => {
           </div>
         ))}
       </div>
-    </div>
-  );
-};
 
-const StatusBadge = ({ status }) => (
-  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-    status === 'Delivered' ? 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400' : 
-    status === 'Processing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400' :
-    status === 'Shipped' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400' :
-    status === 'Confirmed' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' :
-    status === 'Pending' ? 'bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400' :
-    'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400'
-  }`}>
-    {status}
-  </span>
-);
-      
       {/* Pagination Footer */}
       <div className="p-4 border-t border-slate-100 dark:border-[#334155] flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-sm text-slate-500 dark:text-[#94A3B8]">
@@ -156,3 +140,16 @@ const StatusBadge = ({ status }) => (
     </div>
   );
 };
+
+const StatusBadge = ({ status }) => (
+  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+    status === 'Delivered' ? 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400' : 
+    status === 'Processing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400' :
+    status === 'Shipped' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400' :
+    status === 'Confirmed' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' :
+    status === 'Pending' ? 'bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400' :
+    'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400'
+  }`}>
+    {status}
+  </span>
+);
